@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Durdona Restorani | 3D Veb-sayt</title>
+    <title>Durdona Restorani | Luxury 3D Veb-sayt</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,12 +13,19 @@
                 extend: {
                     colors: {
                         gold: {
+                            300: '#fef08a',
                             400: '#f6e05e',
                             500: '#ecc94b',
                             600: '#d69e2e',
                             700: '#b7791f',
+                            800: '#975a16'
                         },
-                        dark: '#0a0a0a'
+                        dark: {
+                            900: '#050505',
+                            800: '#0a0a0a',
+                            700: '#121212',
+                            600: '#1a1a1a'
+                        }
                     },
                     fontFamily: {
                         serif: ['"Playfair Display"', 'serif'],
@@ -30,343 +37,546 @@
     </script>
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- FontAwesome -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-                                                                                                                                                                                                        
-    <!-- Three.js -->
+    
+    <!-- Three.js Library for 3D Effects -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-    <!-- Custom CSS for 3D Effects and Animations -->
     <style>
         body {
             margin: 0;
             overflow-x: hidden;
-            background-color: #0a0a0a;
+            background-color: #050505;
             color: #ffffff;
+            font-family: 'Poppins', sans-serif;
         }
 
-        /* 3D Background Canvas */
+        /* WebGL Background Canvas */
         #bg-canvas {
-            position: fixed;                                                                                                                                                                                                                                                                                                                                            
+            position: fixed;
             top: 0;
-            left: 0;                                                                                                                                                        
+            left: 0;
             width: 100vw;
             height: 100vh;
             z-index: -1;
-            pointer-events: none; /* Let clicks pass through to content */
+            pointer-events: none;
         }
 
-        /* Gradient Overlay */
+        /* Vignette Radial Overlay */
         .overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: radial-gradient(circle at center, transparent 0%, #0a0a0a 100%);
+            background: radial-gradient(circle at center, rgba(5,5,5,0.3) 0%, #050505 100%);
             z-index: -1;
             pointer-events: none;
         }
 
-        /* 3D Card Container */
+        /* 3D Perspective Card Container */
         .card-container {
-            perspective: 1000px;
+            perspective: 1200px;
         }
 
-        /* The 3D Card */
+        /* 3D Interactive Tilt Card */
         .tilt-card {
             transform-style: preserve-3d;
-            transition: transform 0.1s ease-out; /* Smooth transition for JS mouse move */
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.1);
-            background: rgba(20, 20, 20, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 1rem;
+            transition: transform 0.1s ease-out, box-shadow 0.3s ease;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(214,158,46,0.2);
+            background: rgba(18, 18, 18, 0.75);
+            backdrop-filter: blur(12px);
+            border-radius: 1.25rem;
         }
 
-        /* Card Content that pops out */
+        .tilt-card:hover {
+            box-shadow: 0 25px 50px rgba(214,158,46,0.25), inset 0 0 0 1px rgba(214,158,46,0.6);
+        }
+
+        /* 3D Floating Layers inside Card */
         .card-content-3d {
-            transform: translateZ(60px); /* Pushes content towards the viewer */
+            transform: translateZ(50px);
             transform-style: preserve-3d;
         }
-        
+
         .card-bg-image {
-            transform: translateZ(-20px) scale(1.05); /* Pushes image back to create depth */
-            transition: transform 0.3s ease;
+            transform: translateZ(-15px) scale(1.08);
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
         }
 
-        /* Floating Animation */
+        .tilt-card:hover .card-bg-image {
+            transform: translateZ(0px) scale(1.15);
+        }
+
+        /* Keyframe Floating Elements */
         @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(1deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
         }
 
         .floating-element {
-            animation: float 4s ease-in-out infinite;
+            animation: float 5s ease-in-out infinite;
         }
 
-        /* Custom Scrollbar */
+        /* Custom Gold Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #0a0a0a;
+            background: #050505;
         }
         ::-webkit-scrollbar-thumb {
-            background: #d69e2e;
+            background: linear-gradient(to bottom, #d69e2e, #b7791f);
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
             background: #ecc94b;
         }
-        
-        /* Gold Text Gradient */
+
+        /* Gold Gradient Text */
         .text-gradient-gold {
-            background: linear-gradient(to right, #f6e05e, #b7791f);
+            background: linear-gradient(135deg, #fff2a1 0%, #f6e05e 30%, #d69e2e 70%, #975a16 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
+        .gold-border-glow {
+            box-shadow: 0 0 20px rgba(214, 158, 46, 0.3);
+        }
+
+        /* Glassmorphism Panel */
+        .glass-panel {
+            background: rgba(18, 18, 18, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
     </style>
 </head>
-<body class="font-sans antialiased selection:bg-gold-600 selection:text-white">
+<body class="font-sans antialiased selection:bg-gold-600 selection:text-black">
 
-    <!-- WebGL Background -->
+    <!-- WebGL Dynamic Background -->
     <canvas id="bg-canvas"></canvas>
     <div class="overlay"></div>
 
-    <nav class="fixed w-full z-50 transition-all duration-300 backdrop-blur-md bg-black/40 border-b border-white/10" id="navbar">
+    <!-- Navigation Header -->
+    <nav class="fixed w-full z-50 transition-all duration-300 backdrop-blur-md bg-black/60 border-b border-gold-500/20" id="navbar">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-3xl font-serif font-bold text-white tracking-widest">
-                DUR<span class="text-gold-500">DONA</span>
+            <!-- Brand Logo -->
+            <a href="#" class="text-2xl md:text-3xl font-serif font-bold text-white tracking-widest flex items-center gap-2 group">
+                <i class="fas fa-crown text-gold-500 text-xl group-hover:rotate-12 transition-transform duration-300"></i>
+                <span>DUR<span class="text-gold-500">DONA</span></span>
             </a>
-            <div class="hidden md:flex space-x-8 items-center">
-                <a href="#home" class="text-gray-300 hover:text-gold-400 transition-colors uppercase tracking-wider text-sm font-medium">Asosiy</a>
-                <a href="#menu" class="text-gray-300 hover:text-gold-400 transition-colors uppercase tracking-wider text-sm font-medium">Menyu</a>
-                <a href="#about" class="text-gray-300 hover:text-gold-400 transition-colors uppercase tracking-wider text-sm font-medium">Biz Haqimizda</a>
-                <a href="#contact" class="text-gray-300 hover:text-gold-400 transition-colors uppercase tracking-wider text-sm font-medium">Aloqa</a>
-                
-                <!-- YANGI QO'SHILGAN TUGMA (Yangi oynada ochiladi) -->
-                <a href="https://www.google.com" target="_blank" class="px-6 py-2 bg-white/10 border border-white/30 text-white hover:bg-white/20 transition-all rounded-full uppercase tracking-wider text-sm font-semibold">
-                    Yangi Oyna
-                </a>
 
-                <a href="#contact" class="px-6 py-2 border border-gold-500 text-gold-500 hover:bg-gold-500 hover:text-black transition-all rounded-full uppercase tracking-wider text-sm font-semibold">Stol Band Qilish</a>
+            <!-- Desktop Links & Buttons -->
+            <div class="hidden md:flex space-x-6 lg:space-x-8 items-center">
+                <a href="#home" class="text-gray-300 hover:text-gold-400 transition-colors uppercase tracking-wider text-xs font-semibold">Asosiy</a>
+                <a href="#menu" class="text-gray-300 hover:text-gold-400 transition-colors uppercase tracking-wider text-xs font-semibold">Menyu</a>
+                <a href="#about" class="text-gray-300 hover:text-gold-400 transition-colors uppercase tracking-wider text-xs font-semibold">Biz Haqimizda</a>
+                <a href="#contact" class="text-gray-300 hover:text-gold-400 transition-colors uppercase tracking-wider text-xs font-semibold">Aloqa</a>
+                
+                <!-- NEW BUTTON: Yangiliklar (Opens Dedicated News Window) -->
+                <button onclick="openNewsWindow()" class="relative group px-5 py-2.5 rounded-full bg-gradient-to-r from-gold-600/20 to-gold-500/10 border border-gold-500/50 text-gold-400 hover:text-black hover:bg-gold-500 transition-all duration-300 shadow-lg shadow-gold-500/10 flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-gold-500"></span>
+                    </span>
+                    <i class="fas fa-newspaper text-sm group-hover:scale-110 transition-transform"></i>
+                    <span>Yangiliklar</span>
+                    <i class="fas fa-external-link-alt text-[10px] opacity-70 ml-0.5"></i>
+                </button>
+
+                <!-- Action Button: Reservation -->
+                <a href="#contact" class="px-6 py-2.5 bg-gradient-to-r from-gold-600 to-gold-500 text-black hover:from-gold-500 hover:to-gold-400 font-bold transition-all duration-300 rounded-full uppercase tracking-wider text-xs shadow-lg shadow-gold-600/30 transform hover:-translate-y-0.5">
+                    Stol Band Qilish
+                </a>
             </div>
-            <!-- Mobile Menu Button -->
-            <button class="md:hidden text-white text-2xl" id="mobile-menu-btn">
-                <i class="fas fa-bars"></i>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button class="md:hidden text-gold-500 text-2xl focus:outline-none p-2" id="mobile-menu-btn" aria-label="Menu Toggle">
+                <i class="fas fa-bars" id="mobile-icon"></i>
             </button>
         </div>
-    </nav>
 
-    <section id="home" class="relative min-h-screen flex items-center justify-center pt-20 px-6">
-        <div class="text-center z-10 max-w-4xl mx-auto floating-element">
-            <p class="text-gold-400 uppercase tracking-[0.3em] mb-4 text-sm md:text-base font-semibold">Toshkentning yuragidagi betakror ta'm</p>
-            <h1 class="text-5xl md:text-7xl lg:text-8xl font-serif font-bold mb-6 leading-tight">
-                <span class="text-gradient-gold">Durdona</span> <br>
-                Restorani
-            </h1>
-            <p class="text-gray-300 text-lg md:text-xl mb-10 max-w-2xl mx-auto font-light">
-                O'zbek milliy taomlari va yevropa oshxonasining eng sara namunalarini zamonaviy dizayn va yuqori darajadagi xizmat ko'rsatish bilan birga tatib ko'ring.
-            </p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="#menu" class="px-8 py-4 bg-gold-600 hover:bg-gold-500 text-black font-semibold rounded-full transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(214,158,46,0.4)]">
-                    Menyuni Ko'rish
-                </a>
-                <a href="#contact" class="px-8 py-4 border border-white/30 hover:border-gold-500 hover:text-gold-400 text-white font-semibold rounded-full transition-all backdrop-blur-sm">
+        <!-- Mobile Drawer Navigation -->
+        <div class="hidden md:hidden bg-dark-800/95 border-b border-gold-500/30 backdrop-blur-xl px-6 py-6 transition-all" id="mobile-menu">
+            <div class="flex flex-col space-y-4">
+                <a href="#home" class="mobile-link text-gray-200 hover:text-gold-400 font-medium tracking-wide">Asosiy</a>
+                <a href="#menu" class="mobile-link text-gray-200 hover:text-gold-400 font-medium tracking-wide">Menyu</a>
+                <a href="#about" class="mobile-link text-gray-200 hover:text-gold-400 font-medium tracking-wide">Biz Haqimizda</a>
+                <a href="#contact" class="mobile-link text-gray-200 hover:text-gold-400 font-medium tracking-wide">Aloqa</a>
+                
+                <hr class="border-white/10 my-2">
+                
+                <!-- Mobile Yangiliklar Button -->
+                <button onclick="openNewsWindow()" class="w-full py-3 rounded-xl bg-gold-500/10 border border-gold-500/40 text-gold-400 flex items-center justify-center gap-2 font-bold uppercase tracking-wider text-sm">
+                    <i class="fas fa-newspaper"></i>
+                    <span>Yangiliklar & Aksiyalar</span>
+                    <i class="fas fa-external-link-alt text-xs"></i>
+                </button>
+
+                <a href="#contact" class="mobile-link w-full py-3 text-center bg-gold-600 text-black font-bold rounded-xl uppercase tracking-wider text-sm">
                     Stol Band Qilish
                 </a>
             </div>
         </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center pt-24 pb-12 px-6">
+        <div class="text-center z-10 max-w-5xl mx-auto floating-element">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold-500/10 border border-gold-500/30 text-gold-400 uppercase tracking-[0.25em] mb-6 text-xs md:text-sm font-semibold">
+                <i class="fas fa-star text-gold-400 text-xs"></i>
+                <span>Toshkentning Yuragidagi Premium Restoran</span>
+                <i class="fas fa-star text-gold-400 text-xs"></i>
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-serif font-bold mb-6 leading-tight tracking-tight">
+                <span class="text-gradient-gold">Durdona</span> <br>
+                <span class="text-white font-normal italic">Shirin Ehtiros & San'at</span>
+            </h1>
+            
+            <p class="text-gray-300 text-base md:text-xl mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+                O'zbek milliy taomlari va Yevropa oliy oshxonasining eng sara duedlari, mualliflik retseptlari va unutilmas shohona muhit.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row justify-center gap-5">
+                <a href="#menu" class="px-8 py-4 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-black font-bold rounded-full transition-all transform hover:scale-105 shadow-[0_0_30px_rgba(214,158,46,0.4)] tracking-wide text-sm flex items-center justify-center gap-2">
+                    <i class="fas fa-utensils"></i>
+                    <span>Menyuni Ko'rish</span>
+                </a>
+                
+                <button onclick="openNewsWindow()" class="px-8 py-4 border border-gold-500/50 hover:border-gold-400 text-gold-400 hover:text-black hover:bg-gold-500 font-bold rounded-full transition-all backdrop-blur-md tracking-wide text-sm flex items-center justify-center gap-2 group">
+                    <i class="fas fa-bullhorn text-gold-400 group-hover:text-black"></i>
+                    <span>So'nggi Yangiliklar</span>
+                    <i class="fas fa-arrow-right text-xs transform group-hover:translate-x-1 transition-transform"></i>
+                </button>
+            </div>
+        </div>
         
-        <!-- Scroll indicator -->
-        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <a href="#menu" class="text-white/50 hover:text-gold-500 transition-colors">
-                <i class="fas fa-chevron-down text-2xl"></i>
+        <!-- Animated Scroll Down Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce hidden sm:block">
+            <a href="#menu" class="text-gold-500/70 hover:text-gold-400 transition-colors p-2">
+                <i class="fas fa-chevron-down text-xl"></i>
             </a>
         </div>
     </section>
 
-    <section id="menu" class="py-24 relative z-10 bg-black/60 backdrop-blur-md">
+    <!-- Menu Section -->
+    <section id="menu" class="py-28 relative z-10 bg-dark-900/80 backdrop-blur-md border-t border-b border-white/5">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center mb-16">
-                <p class="text-gold-500 uppercase tracking-widest mb-2 font-medium">Kashf eting</p>
-                <h2 class="text-4xl md:text-5xl font-serif font-bold text-white">Bizning Menyu</h2>
-                <div class="h-1 w-24 bg-gold-600 mx-auto mt-6 rounded-full"></div>
+                <p class="text-gold-500 uppercase tracking-widest mb-3 text-xs font-bold">Lazzat cho'qqisi</p>
+                <h2 class="text-4xl md:text-6xl font-serif font-bold text-white">Shohona Menyu</h2>
+                <div class="h-1 w-20 bg-gradient-to-r from-transparent via-gold-500 to-transparent mx-auto mt-6"></div>
+            </div>
+
+            <!-- Menu Category Filter Tabs -->
+            <div class="flex flex-wrap justify-center gap-3 mb-12" id="menu-tabs">
+                <button onclick="filterMenu('all')" class="menu-tab-btn active px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all bg-gold-600 text-black shadow-lg">Barchasi</button>
+                <button onclick="filterMenu('milliy')" class="menu-tab-btn px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all bg-white/5 border border-white/10 text-gray-300 hover:border-gold-500 hover:text-gold-400">Milliy Taomlar</button>
+                <button onclick="filterMenu('kabob')" class="menu-tab-btn px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all bg-white/5 border border-white/10 text-gray-300 hover:border-gold-500 hover:text-gold-400">Kaboblar</button>
+                <button onclick="filterMenu('special')" class="menu-tab-btn px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all bg-white/5 border border-white/10 text-gray-300 hover:border-gold-500 hover:text-gold-400">Chef Maxsus</button>
             </div>
 
             <!-- 3D Cards Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="menu-grid">
                 
-                <!-- Card 1 -->
-                <div class="card-container w-full h-[450px]">
-                    <div class="tilt-card w-full h-full relative overflow-hidden flex flex-col justify-end p-6 cursor-pointer group">
-                        <!-- Background Image -->
-                        <div class="absolute inset-0 bg-cover bg-center card-bg-image opacity-60 group-hover:opacity-80 transition-opacity" style="background-image: url('https://placehold.co/600x800/1a1a1a/d69e2e?text=Shohona+Palov');"></div>
-                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                <!-- Card 1: Shohona Palov -->
+                <div class="card-container w-full h-[460px] menu-item" data-category="milliy">
+                    <div class="tilt-card w-full h-full relative overflow-hidden flex flex-col justify-end p-7 cursor-pointer group">
+                        <div class="absolute inset-0 bg-cover bg-center card-bg-image opacity-60 group-hover:opacity-80" style="background-image: url('https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?auto=format&fit=crop&w=800&q=80');"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/60 to-transparent"></div>
                         
-                        <!-- 3D Content -->
                         <div class="card-content-3d relative z-10">
-                            <h3 class="text-3xl font-serif font-bold text-white mb-2">Shohona Palov</h3>
-                            <p class="text-gray-300 mb-4 font-light text-sm">Haqiqiy devzira guruchidan tayyorlangan, lahm go'sht va bedana tuxumi bilan bezatilgan shohona taom.</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-gold-400 font-bold text-xl">120,000 UZS</span>
-                                <button class="w-10 h-10 rounded-full bg-white/10 hover:bg-gold-500 hover:text-black flex items-center justify-center transition-colors backdrop-blur-sm">
-                                    <i class="fas fa-arrow-right"></i>
+                            <span class="inline-block px-3 py-1 bg-gold-500/20 border border-gold-500/40 text-gold-400 text-[10px] uppercase font-bold tracking-widest rounded-md mb-3">Toshkent Sifat</span>
+                            <h3 class="text-2xl font-serif font-bold text-white mb-2 group-hover:text-gold-400 transition-colors">Shohona Devzira Palov</h3>
+                            <p class="text-gray-300 mb-5 font-light text-xs leading-relaxed">Tanlangan Devzira guruchi, marmar mol go'shti, bedana tuxumlari va kazy bilan pishirilgan haqiqiy san'at asari.</p>
+                            <div class="flex justify-between items-center pt-3 border-t border-white/10">
+                                <div>
+                                    <span class="text-xs text-gray-400 block">1 Portsiya</span>
+                                    <span class="text-gold-400 font-bold text-xl">120,000 UZS</span>
+                                </div>
+                                <button onclick="showDishDetails('Shohona Devzira Palov', '120,000 UZS', 'Devzira guruchi, marmar lahm go\'sht, zarafshon sabzisi, zira, bedana tuxumi, qazi va anor donachalari.')" class="w-11 h-11 rounded-full bg-gold-500/20 hover:bg-gold-500 hover:text-black text-gold-400 flex items-center justify-center transition-all border border-gold-500/40">
+                                    <i class="fas fa-plus"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 2 -->
-                <div class="card-container w-full h-[450px]">
-                    <div class="tilt-card w-full h-full relative overflow-hidden flex flex-col justify-end p-6 cursor-pointer group">
-                        <div class="absolute inset-0 bg-cover bg-center card-bg-image opacity-60 group-hover:opacity-80 transition-opacity" style="background-image: url('https://placehold.co/600x800/1a1a1a/d69e2e?text=Qozon+Kabob');"></div>
-                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                <!-- Card 2: Qozon Kabob -->
+                <div class="card-container w-full h-[460px] menu-item" data-category="kabob">
+                    <div class="tilt-card w-full h-full relative overflow-hidden flex flex-col justify-end p-7 cursor-pointer group">
+                        <div class="absolute inset-0 bg-cover bg-center card-bg-image opacity-60 group-hover:opacity-80" style="background-image: url('https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80');"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/60 to-transparent"></div>
+                        
                         <div class="card-content-3d relative z-10">
-                            <h3 class="text-3xl font-serif font-bold text-white mb-2">Qozon Kabob</h3>
-                            <p class="text-gray-300 mb-4 font-light text-sm">Yumshoq qo'y go'shti va qovurilgan kartoshka, o'ziga xos ziravorlar bilan dimlab pishirilgan.</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-gold-400 font-bold text-xl">150,000 UZS</span>
-                                <button class="w-10 h-10 rounded-full bg-white/10 hover:bg-gold-500 hover:text-black flex items-center justify-center transition-colors backdrop-blur-sm">
-                                    <i class="fas fa-arrow-right"></i>
+                            <span class="inline-block px-3 py-1 bg-gold-500/20 border border-gold-500/40 text-gold-400 text-[10px] uppercase font-bold tracking-widest rounded-md mb-3">Mashhur</span>
+                            <h3 class="text-2xl font-serif font-bold text-white mb-2 group-hover:text-gold-400 transition-colors">Yumshoq Qozon Kabob</h3>
+                            <p class="text-gray-300 mb-5 font-light text-xs leading-relaxed">Peshona qismi qo'y qovurg'alari va qovurilgan tillarang kartoshka maxsus o'tlar sousida dimlab pishirilgan.</p>
+                            <div class="flex justify-between items-center pt-3 border-t border-white/10">
+                                <div>
+                                    <span class="text-xs text-gray-400 block">1 Portsiya</span>
+                                    <span class="text-gold-400 font-bold text-xl">155,000 UZS</span>
+                                </div>
+                                <button onclick="showDishDetails('Yumshoq Qozon Kabob', '155,000 UZS', 'Qo\'y qovurg\'alari, kichik oltin kartoshka, sarimsoq, tog\' ziravorlari va maxsus sous.')" class="w-11 h-11 rounded-full bg-gold-500/20 hover:bg-gold-500 hover:text-black text-gold-400 flex items-center justify-center transition-all border border-gold-500/40">
+                                    <i class="fas fa-plus"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 3 -->
-                <div class="card-container w-full h-[450px]">
-                    <div class="tilt-card w-full h-full relative overflow-hidden flex flex-col justify-end p-6 cursor-pointer group">
-                        <div class="absolute inset-0 bg-cover bg-center card-bg-image opacity-60 group-hover:opacity-80 transition-opacity" style="background-image: url('https://placehold.co/600x800/1a1a1a/d69e2e?text=Tandir+Somsa');"></div>
-                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                <!-- Card 3: Royal Ribeye Steak -->
+                <div class="card-container w-full h-[460px] menu-item" data-category="special">
+                    <div class="tilt-card w-full h-full relative overflow-hidden flex flex-col justify-end p-7 cursor-pointer group">
+                        <div class="absolute inset-0 bg-cover bg-center card-bg-image opacity-60 group-hover:opacity-80" style="background-image: url('https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=800&q=80');"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/60 to-transparent"></div>
+                        
                         <div class="card-content-3d relative z-10">
-                            <h3 class="text-3xl font-serif font-bold text-white mb-2">Tandir Somsa</h3>
-                            <p class="text-gray-300 mb-4 font-light text-sm">Qatlamali xamir va sersuv go'sht, haqiqiy o'zbek tandirida qizartirib yopilgan maxsus somsa.</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-gold-400 font-bold text-xl">25,000 UZS</span>
-                                <button class="w-10 h-10 rounded-full bg-white/10 hover:bg-gold-500 hover:text-black flex items-center justify-center transition-colors backdrop-blur-sm">
-                                    <i class="fas fa-arrow-right"></i>
+                            <span class="inline-block px-3 py-1 bg-gold-500/20 border border-gold-500/40 text-gold-400 text-[10px] uppercase font-bold tracking-widest rounded-md mb-3">Chef Eksklyuziv</span>
+                            <h3 class="text-2xl font-serif font-bold text-white mb-2 group-hover:text-gold-400 transition-colors">Royal Ribeye Steak</h3>
+                            <p class="text-gray-300 mb-5 font-light text-xs leading-relaxed">28 kun yetiltirilgan pishgan mol go'shti steyki, sarimsoqli saryog' va rozmarin giyohi bilan uzatiladi.</p>
+                            <div class="flex justify-between items-center pt-3 border-t border-white/10">
+                                <div>
+                                    <span class="text-xs text-gray-400 block">350g</span>
+                                    <span class="text-gold-400 font-bold text-xl">280,000 UZS</span>
+                                </div>
+                                <button onclick="showDishDetails('Royal Ribeye Steak', '280,000 UZS', 'Dry-aged Angus ribeye, truffle saryog\', rozmarin va pechda pishirilgan sabzavotlar.')" class="w-11 h-11 rounded-full bg-gold-500/20 hover:bg-gold-500 hover:text-black text-gold-400 flex items-center justify-center transition-all border border-gold-500/40">
+                                    <i class="fas fa-plus"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Card 4: Tandir Somsa -->
+                <div class="card-container w-full h-[460px] menu-item" data-category="milliy">
+                    <div class="tilt-card w-full h-full relative overflow-hidden flex flex-col justify-end p-7 cursor-pointer group">
+                        <div class="absolute inset-0 bg-cover bg-center card-bg-image opacity-60 group-hover:opacity-80" style="background-image: url('https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80');"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/60 to-transparent"></div>
+                        
+                        <div class="card-content-3d relative z-10">
+                            <span class="inline-block px-3 py-1 bg-gold-500/20 border border-gold-500/40 text-gold-400 text-[10px] uppercase font-bold tracking-widest rounded-md mb-3">An'anaviy</span>
+                            <h3 class="text-2xl font-serif font-bold text-white mb-2 group-hover:text-gold-400 transition-colors">Qatlama Tandir Somsa</h3>
+                            <p class="text-gray-300 mb-5 font-light text-xs leading-relaxed">Mayin qatlama xamir, sersuv saralangan pichoq go'shti va dandon piyoz bilan tandirda pishirilgan.</p>
+                            <div class="flex justify-between items-center pt-3 border-t border-white/10">
+                                <div>
+                                    <span class="text-xs text-gray-400 block">1 Dona</span>
+                                    <span class="text-gold-400 font-bold text-xl">28,000 UZS</span>
+                                </div>
+                                <button onclick="showDishDetails('Qatlama Tandir Somsa', '28,000 UZS', 'Qatlamali maxsus xamir, maydalangan qo\'y go\'shti, piyoz, murch va pomidorli o\'tkir achchik sous.')" class="w-11 h-11 rounded-full bg-gold-500/20 hover:bg-gold-500 hover:text-black text-gold-400 flex items-center justify-center transition-all border border-gold-500/40">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 5: Shashlik Assorti -->
+                <div class="card-container w-full h-[460px] menu-item" data-category="kabob">
+                    <div class="tilt-card w-full h-full relative overflow-hidden flex flex-col justify-end p-7 cursor-pointer group">
+                        <div class="absolute inset-0 bg-cover bg-center card-bg-image opacity-60 group-hover:opacity-80" style="background-image: url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80');"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/60 to-transparent"></div>
+                        
+                        <div class="card-content-3d relative z-10">
+                            <span class="inline-block px-3 py-1 bg-gold-500/20 border border-gold-500/40 text-gold-400 text-[10px] uppercase font-bold tracking-widest rounded-md mb-3">Kompaniya Uchun</span>
+                            <h3 class="text-2xl font-serif font-bold text-white mb-2 group-hover:text-gold-400 transition-colors">Durdona Shashlik Sets</h3>
+                            <p class="text-gray-300 mb-5 font-light text-xs leading-relaxed">Kiyma, qiymali, napoleon, tovuq va jaz shashliklar jamlanmasi maxsus tuzlangan piyoz bilan.</p>
+                            <div class="flex justify-between items-center pt-3 border-t border-white/10">
+                                <div>
+                                    <span class="text-xs text-gray-400 block">6 Sich</span>
+                                    <span class="text-gold-400 font-bold text-xl">210,000 UZS</span>
+                                </div>
+                                <button onclick="showDishDetails('Durdona Shashlik Sets', '210,000 UZS', 'G\'ijduvon qiymasi, Napoleon, Tovuq, Sarimsoqli jaz kabob, sirli tenderloin va souslar.')" class="w-11 h-11 rounded-full bg-gold-500/20 hover:bg-gold-500 hover:text-black text-gold-400 flex items-center justify-center transition-all border border-gold-500/40">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 6: Salmon Deluxe -->
+                <div class="card-container w-full h-[460px] menu-item" data-category="special">
+                    <div class="tilt-card w-full h-full relative overflow-hidden flex flex-col justify-end p-7 cursor-pointer group">
+                        <div class="absolute inset-0 bg-cover bg-center card-bg-image opacity-60 group-hover:opacity-80" style="background-image: url('https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=800&q=80');"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/60 to-transparent"></div>
+                        
+                        <div class="card-content-3d relative z-10">
+                            <span class="inline-block px-3 py-1 bg-gold-500/20 border border-gold-500/40 text-gold-400 text-[10px] uppercase font-bold tracking-widest rounded-md mb-3">Dengiz In'omi</span>
+                            <h3 class="text-2xl font-serif font-bold text-white mb-2 group-hover:text-gold-400 transition-colors">Grill Salmon Steak</h3>
+                            <p class="text-gray-300 mb-5 font-light text-xs leading-relaxed">Norvegiya salmon balig'i grilda pishirilib, limon-krem sousi va ismaloq garniri bilan taqdim etiladi.</p>
+                            <div class="flex justify-between items-center pt-3 border-t border-white/10">
+                                <div>
+                                    <span class="text-xs text-gray-400 block">250g</span>
+                                    <span class="text-gold-400 font-bold text-xl">240,000 UZS</span>
+                                </div>
+                                <button onclick="showDishDetails('Grill Salmon Steak', '240,000 UZS', 'Yangi Salmon balig\'i, limon-saryog\' krem sousi, sparraja va ismaloq soté.')" class="w-11 h-11 rounded-full bg-gold-500/20 hover:bg-gold-500 hover:text-black text-gold-400 flex items-center justify-center transition-all border border-gold-500/40">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- News Preview Callout Section -->
+    <section class="py-16 relative z-10 bg-gradient-to-r from-gold-900/30 via-dark-800 to-gold-900/30 border-y border-gold-500/30 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="flex items-center gap-5">
+                <div class="w-16 h-16 rounded-2xl bg-gold-500/20 border border-gold-500/50 flex items-center justify-center text-gold-400 text-3xl shrink-0 floating-element">
+                    <i class="fas fa-bullhorn"></i>
+                </div>
+                <div>
+                    <span class="text-gold-400 text-xs font-bold uppercase tracking-widest">Eksklyuziv Tadbirlar & Aksiyalar</span>
+                    <h3 class="text-2xl md:text-3xl font-serif font-bold text-white mt-1">Durdona Restoranining So'nggi Yangiliklari</h3>
+                    <p class="text-gray-400 text-xs md:text-sm mt-1">Jonli jazz kechalari, bahoriy chegirmalar va oshpazimizdan yangi taomlar taqdimoti bilan tanishing.</p>
+                </div>
             </div>
             
-            <div class="mt-16 text-center">
-                <a href="#" class="inline-flex items-center gap-2 text-gold-500 hover:text-gold-400 transition-colors uppercase tracking-widest font-semibold border-b border-gold-500 pb-1">
-                    To'liq menyuni yuklab olish <i class="fas fa-download"></i>
-                </a>
-            </div>
+            <button onclick="openNewsWindow()" class="shrink-0 px-8 py-4 bg-gold-500 hover:bg-gold-400 text-black font-bold rounded-full transition-all shadow-xl shadow-gold-500/20 flex items-center gap-3 tracking-wider text-xs uppercase transform hover:scale-105">
+                <i class="fas fa-window-restore"></i>
+                <span>Yangiliklarni Ochish (Yangi Oynada)</span>
+            </button>
         </div>
     </section>
 
-    <section id="about" class="py-24 relative z-10">
+    <!-- About Section -->
+    <section id="about" class="py-28 relative z-10">
         <div class="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-16">
             <div class="w-full lg:w-1/2">
-                <div class="relative w-full h-[500px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-                    <img src="https://placehold.co/800x1000/0a0a0a/d69e2e?text=Restoran+Ichki+Ko'rinishi" alt="Restoran Ichkarisi" class="object-cover w-full h-full opacity-70 hover:opacity-100 transition-opacity duration-500">
+                <div class="relative w-full h-[480px] rounded-3xl overflow-hidden border border-gold-500/30 shadow-2xl glass-panel group">
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1000&q=80" alt="Restoran Zali" class="object-cover w-full h-full opacity-80 group-hover:opacity-100 transition-opacity duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-transparent to-transparent"></div>
+                    
                     <!-- Floating Badge -->
-                    <div class="absolute -bottom-6 -right-6 bg-gold-600 text-black p-8 rounded-full w-40 h-40 flex flex-col items-center justify-center shadow-2xl floating-element border-4 border-black">
-                        <span class="text-4xl font-serif font-bold">15+</span>
-                        <span class="text-sm uppercase tracking-wider font-semibold text-center">Yillik <br> Tajriba</span>
+                    <div class="absolute bottom-6 left-6 bg-gradient-to-br from-gold-500 to-gold-700 text-black p-6 rounded-2xl shadow-2xl floating-element border border-white/20">
+                        <span class="text-4xl font-serif font-bold block leading-none">15+</span>
+                        <span class="text-[11px] uppercase tracking-wider font-extrabold block mt-1">Yillik Muhabbat & Oliy Tajriba</span>
                     </div>
                 </div>
             </div>
+
             <div class="w-full lg:w-1/2">
-                <p class="text-gold-500 uppercase tracking-widest mb-2 font-medium">Tariximiz</p>
-                <h2 class="text-4xl md:text-5xl font-serif font-bold text-white mb-6">Nafosat va An'analar</h2>
-                <p class="text-gray-300 mb-6 leading-relaxed font-light">
-                    "Durdona" restorani 2008 yildan buyon tashrif buyuruvchilarga xizmat ko'rsatib kelmoqda. Bizning maqsadimiz – har bir mehmonga shunchaki ovqatlanish emas, balki unutilmas hissiyotlarni ulashishdir.
+                <p class="text-gold-500 uppercase tracking-widest mb-2 text-xs font-bold">Meros va San'at</p>
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-white mb-6 leading-tight">An'ana va Zamonaviylik Uyg'unligi</h2>
+                <p class="text-gray-300 mb-6 leading-relaxed font-light text-sm md:text-base">
+                    "Durdona" restorani 2008-yildan buyon milliy va xalqaro mehmondo'stlik oliy standartlarini taqdim etib keladi. Biz shunchaki ovqatlanish emas, balki esda qolarli unutilmas xotiralarni ulashishni maqsad qilganmiz.
                 </p>
-                <p class="text-gray-300 mb-8 leading-relaxed font-light">
-                    Mohir oshpazlarimiz asrlar davomida shakllangan o'zbek milliy taomlari retseptlarini zamonaviy uslub bilan uyg'unlashtirgan holda sizga tortiq etishadi. Interyerimiz esa milliy naqshlar va yevropacha klassikani o'zida mujassam etgan.
+                <p class="text-gray-300 mb-8 leading-relaxed font-light text-sm md:text-base">
+                    Har bir taom sharqona saxovat va yevropacha nazokat bilan tayyorlanadi. Zallarimiz sharq naqshlari va zamonaviy minimalist oltin dekoratsiyalar bilan bezatilgan.
                 </p>
-                
-                <div class="grid grid-cols-2 gap-6">
-                    <div class="bg-white/5 border border-white/10 p-4 rounded-xl backdrop-blur-sm">
-                        <i class="fas fa-award text-gold-500 text-3xl mb-3"></i>
-                        <h4 class="text-white font-serif text-xl mb-1">Oliy Sifat</h4>
-                        <p class="text-gray-400 text-sm">Faqat yangi va tabiiy mahsulotlar</p>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="glass-panel p-5 rounded-2xl border border-white/10 hover:border-gold-500/40 transition-colors">
+                        <i class="fas fa-award text-gold-500 text-2xl mb-2"></i>
+                        <h4 class="text-white font-serif text-lg font-bold">5-Yulduzli Sifat</h4>
+                        <p class="text-gray-400 text-xs mt-1">Sertifikatlangan halol va toza mahsulotlar.</p>
                     </div>
-                    <div class="bg-white/5 border border-white/10 p-4 rounded-xl backdrop-blur-sm">
-                        <i class="fas fa-music text-gold-500 text-3xl mb-3"></i>
-                        <h4 class="text-white font-serif text-xl mb-1">Jonli Ijro</h4>
-                        <p class="text-gray-400 text-sm">Har oqshom jonli musiqa sadolari</p>
+                    <div class="glass-panel p-5 rounded-2xl border border-white/10 hover:border-gold-500/40 transition-colors">
+                        <i class="fas fa-music text-gold-500 text-2xl mb-2"></i>
+                        <h4 class="text-white font-serif text-lg font-bold">Jonli Musiqa</h4>
+                        <p class="text-gray-400 text-xs mt-1">Saksafon va milliy sozlar ijrosi.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="contact" class="py-24 relative z-10 bg-black/80 backdrop-blur-lg border-t border-white/10">
+    <!-- Reservation Section -->
+    <section id="contact" class="py-28 relative z-10 bg-dark-900/90 backdrop-blur-xl border-t border-gold-500/20">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center mb-16">
-                <p class="text-gold-500 uppercase tracking-widest mb-2 font-medium">Tashrif buyuring</p>
-                <h2 class="text-4xl md:text-5xl font-serif font-bold text-white">Biz bilan Aloqa</h2>
-                <div class="h-1 w-24 bg-gold-600 mx-auto mt-6 rounded-full"></div>
+                <p class="text-gold-500 uppercase tracking-widest mb-2 text-xs font-bold">Xush Kelibsiz</p>
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-white">Stol Band Qilish</h2>
+                <div class="h-1 w-20 bg-gradient-to-r from-transparent via-gold-500 to-transparent mx-auto mt-6"></div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <!-- Contact Info -->
-                <div class="space-y-8">
-                    <div class="flex items-start gap-6 group">
-                        <div class="w-16 h-16 rounded-full bg-white/5 border border-gold-500/30 flex items-center justify-center text-gold-500 text-2xl group-hover:bg-gold-500 group-hover:text-black transition-all">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Info Cards -->
+                <div class="space-y-6">
+                    <div class="glass-panel p-6 rounded-2xl flex items-start gap-5 border border-white/10 hover:border-gold-500/50 transition-all">
+                        <div class="w-14 h-14 rounded-full bg-gold-500/10 border border-gold-500/40 flex items-center justify-center text-gold-400 text-2xl shrink-0">
                             <i class="fas fa-map-marker-alt"></i>
                         </div>
                         <div>
-                            <h4 class="text-2xl font-serif text-white mb-2">Manzil</h4>
-                            <p class="text-gray-400">Toshkent shahri, Amir Temur shoh ko'chasi, 12-uy.<br>Mo'ljal: Markaziy xiyobon yonida.</p>
+                            <h4 class="text-xl font-serif text-white font-bold mb-1">Manzilimiz</h4>
+                            <p class="text-gray-400 text-xs md:text-sm">Toshkent shahri, Yunusobod tumani, Amir Temur shoh ko'chasi, 108-uy.<br>Mo'ljal: Bodomzor metro bekatiga yaqin.</p>
                         </div>
                     </div>
-                    <div class="flex items-start gap-6 group">
-                        <div class="w-16 h-16 rounded-full bg-white/5 border border-gold-500/30 flex items-center justify-center text-gold-500 text-2xl group-hover:bg-gold-500 group-hover:text-black transition-all">
-                            <i class="fas fa-phone"></i>
+
+                    <div class="glass-panel p-6 rounded-2xl flex items-start gap-5 border border-white/10 hover:border-gold-500/50 transition-all">
+                        <div class="w-14 h-14 rounded-full bg-gold-500/10 border border-gold-500/40 flex items-center justify-center text-gold-400 text-2xl shrink-0">
+                            <i class="fas fa-phone-alt"></i>
                         </div>
                         <div>
-                            <h4 class="text-2xl font-serif text-white mb-2">Telefon</h4>
-                            <p class="text-gray-400">+998 71 234 56 78</p>
-                            <p class="text-gray-400">+998 90 123 45 67 (Band qilish)</p>
+                            <h4 class="text-xl font-serif text-white font-bold mb-1">Bog'lanish Telefonlari</h4>
+                            <p class="text-gray-400 text-xs md:text-sm">+998 (71) 200-88-88 &bull; Admin</p>
+                            <p class="text-gold-400 text-xs md:text-sm mt-1 font-semibold">+998 (90) 123-45-67 &bull; Band qilish markazi</p>
                         </div>
                     </div>
-                    <div class="flex items-start gap-6 group">
-                        <div class="w-16 h-16 rounded-full bg-white/5 border border-gold-500/30 flex items-center justify-center text-gold-500 text-2xl group-hover:bg-gold-500 group-hover:text-black transition-all">
+
+                    <div class="glass-panel p-6 rounded-2xl flex items-start gap-5 border border-white/10 hover:border-gold-500/50 transition-all">
+                        <div class="w-14 h-14 rounded-full bg-gold-500/10 border border-gold-500/40 flex items-center justify-center text-gold-400 text-2xl shrink-0">
                             <i class="far fa-clock"></i>
                         </div>
                         <div>
-                            <h4 class="text-2xl font-serif text-white mb-2">Ish vaqti</h4>
-                            <p class="text-gray-400">Dushanba - Yakshanba: 10:00 - 23:00</p>
+                            <h4 class="text-xl font-serif text-white font-bold mb-1">Ish Vaqti</h4>
+                            <p class="text-gray-400 text-xs md:text-sm">Har kuni: 10:00 dan 23:30 gacha</p>
+                            <p class="text-gray-400 text-xs md:text-sm">Jonli ijro: 19:00 - 22:30</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Reservation Form (3D styling) -->
-                <div class="bg-white/5 border border-white/10 p-8 rounded-2xl backdrop-blur-md relative overflow-hidden">
-                    <div class="absolute -top-20 -right-20 w-40 h-40 bg-gold-600 rounded-full blur-3xl opacity-20"></div>
-                    <h3 class="text-2xl font-serif text-white mb-6">Stol Band Qilish</h3>
-                    <form class="space-y-4 relative z-10" onsubmit="event.preventDefault(); alert('So\'rovingiz qabul qilindi. Tez orada siz bilan bog\'lanamiz!');">
+                <!-- Form -->
+                <div class="glass-panel p-8 md:p-10 rounded-3xl relative border border-gold-500/30 shadow-2xl">
+                    <h3 class="text-2xl font-serif text-white font-bold mb-6 flex items-center gap-2">
+                        <i class="fas fa-calendar-check text-gold-500"></i>
+                        <span>Tashrifingizni Rejalashtiring</span>
+                    </h3>
+
+                    <form id="reservation-form" onsubmit="handleReservation(event)" class="space-y-4">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <input type="text" placeholder="Ismingiz" required class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors">
-                            <input type="tel" placeholder="Telefon raqam" required class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-400 mb-1">Ismingiz</label>
+                                <input type="text" id="res-name" required placeholder="Ali Valiyev" class="w-full bg-black/60 border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-gold-500 transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-400 mb-1">Telefon Raqamingiz</label>
+                                <input type="tel" id="res-phone" required placeholder="+998 90 123 45 67" class="w-full bg-black/60 border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-gold-500 transition-colors">
+                            </div>
                         </div>
+
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <input type="date" required class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors [color-scheme:dark]">
-                            <select class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors appearance-none">
-                                <option>2 Kishi</option>
-                                <option>4 Kishi</option>
-                                <option>6 Kishi</option>
-                                <option>8+ Kishi</option>
-                            </select>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-400 mb-1">Sana</label>
+                                <input type="date" id="res-date" required class="w-full bg-black/60 border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-gold-500 transition-colors [color-scheme:dark]">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-400 mb-1">Mehmonlar Soni</label>
+                                <select id="res-guests" class="w-full bg-black/60 border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-gold-500 transition-colors">
+                                    <option value="2 kishi">2 Kishi (Kichik Stol)</option>
+                                    <option value="4 kishi">4 Kishi (Oila Stol)</option>
+                                    <option value="6 kishi">6 Kishi (Katta Stol)</option>
+                                    <option value="10+ kishi">10+ Kishi (VIP Zali)</option>
+                                </select>
+                            </div>
                         </div>
-                        <textarea placeholder="Qo'shimcha istaklar (ixtiyoriy)" rows="3" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors resize-none"></textarea>
-                        <button type="submit" class="w-full bg-gold-600 hover:bg-gold-500 text-black font-semibold rounded-lg px-6 py-4 transition-all shadow-lg shadow-gold-600/20">
-                            Band Qilish
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 mb-1">Qo'shimcha Istaklar (Ixtiyoriy)</label>
+                            <textarea id="res-notes" rows="3" placeholder="Masalan: Tushlik vaqti, deraza yonidagi stol..." class="w-full bg-black/60 border border-white/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-gold-500 transition-colors resize-none"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-black font-bold rounded-xl px-6 py-4 transition-all shadow-lg shadow-gold-600/30 tracking-wider text-xs uppercase">
+                            Band Qilishni Tasdiqlash
                         </button>
                     </form>
                 </div>
@@ -374,195 +584,407 @@
         </div>
     </section>
 
-    <footer class="bg-black py-8 border-t border-white/10 relative z-10 text-center">
+    <!-- Footer -->
+    <footer class="bg-black py-10 border-t border-white/10 relative z-10 text-center">
         <div class="max-w-7xl mx-auto px-6">
+            <a href="#" class="text-3xl font-serif font-bold text-white tracking-widest inline-block mb-6">
+                DUR<span class="text-gold-500">DONA</span>
+            </a>
+            
             <div class="flex justify-center space-x-6 mb-6">
-                <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:text-gold-500 hover:bg-white/10 transition-colors">
+                <a href="https://instagram.com" target="_blank" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:text-gold-500 hover:border-gold-500 transition-all">
                     <i class="fab fa-instagram"></i>
                 </a>
-                <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:text-gold-500 hover:bg-white/10 transition-colors">
+                <a href="https://telegram.org" target="_blank" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:text-gold-500 hover:border-gold-500 transition-all">
                     <i class="fab fa-telegram-plane"></i>
                 </a>
-                <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:text-gold-500 hover:bg-white/10 transition-colors">
+                <a href="https://facebook.com" target="_blank" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:text-gold-500 hover:border-gold-500 transition-all">
                     <i class="fab fa-facebook-f"></i>
                 </a>
             </div>
-            <p class="text-gray-500 text-sm">
-                &copy; 2023 Durdona Restorani. Barcha huquqlar himoyalangan.
+
+            <p class="text-gray-500 text-xs">
+                &copy; 2026 Durdona Restorani. Barcha huquqlar himoyalangan.
             </p>
         </div>
     </footer>
 
+    <!-- Custom Modal Popup for Dish Details -->
+    <div id="dish-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-md p-4">
+        <div class="bg-dark-800 border border-gold-500/50 rounded-3xl max-w-md w-full p-6 relative shadow-2xl">
+            <button onclick="closeDishModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="w-12 h-12 rounded-full bg-gold-500/20 text-gold-400 flex items-center justify-center text-xl mb-4">
+                <i class="fas fa-utensils"></i>
+            </div>
+            <h3 id="modal-dish-title" class="text-2xl font-serif font-bold text-white mb-1"></h3>
+            <span id="modal-dish-price" class="text-gold-400 font-bold text-lg block mb-4"></span>
+            <p id="modal-dish-desc" class="text-gray-300 text-xs leading-relaxed mb-6"></p>
+            <button onclick="closeDishModal()" class="w-full py-3 bg-gold-500 text-black font-bold rounded-xl text-xs uppercase tracking-wider">Tushunarli</button>
+        </div>
+    </div>
+
+    <!-- Custom Notification Toast -->
+    <div id="notification-toast" class="fixed bottom-6 right-6 z-50 hidden transform transition-all duration-300">
+        <div class="bg-dark-800 border border-gold-500/80 p-4 rounded-2xl shadow-2xl flex items-center gap-4 max-w-sm">
+            <div class="w-10 h-10 rounded-full bg-gold-500 text-black flex items-center justify-center text-lg font-bold shrink-0">
+                <i class="fas fa-check"></i>
+            </div>
+            <div>
+                <h4 id="toast-title" class="text-white text-sm font-bold"></h4>
+                <p id="toast-message" class="text-gray-300 text-xs mt-0.5"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Scripts -->
     <script>
-        /* -------------------------------------------
-           1. THREE.JS 3D BACKGROUND ANIMATION
-        ------------------------------------------- */
+        /* -------------------------------------------------------------
+           1. THREE.JS 3D BACKGROUND ANIMATION SYSTEM
+        ------------------------------------------------------------- */
         const canvas = document.querySelector('#bg-canvas');
         const scene = new THREE.Scene();
-        
-        // Add subtle fog to blend objects into the dark background
-        scene.fog = new THREE.FogExp2(0x0a0a0a, 0.001);
+        scene.fog = new THREE.FogExp2(0x050505, 0.0012);
 
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
         
-        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.setSize(window.innerWidth, window.innerHeight);
         camera.position.z = 50;
 
-        // Particle System (Stars/Dust)
+        // Glowing Dust/Star Particles
+        const particlesCount = 800;
         const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 700;
         const posArray = new Float32Array(particlesCount * 3);
 
         for(let i = 0; i < particlesCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 200; // spread
+            posArray[i] = (Math.random() - 0.5) * 180;
         }
 
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
         const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.1,
+            size: 0.15,
             color: '#ecc94b',
             transparent: true,
-            opacity: 0.5,
+            opacity: 0.6,
             blending: THREE.AdditiveBlending
         });
 
         const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
         scene.add(particlesMesh);
 
-        // Floating Gold Geometries (Elegant Touch)
-        const objects = [];
-        const geom = new THREE.TorusGeometry(2, 0.5, 16, 100);
-        const mat = new THREE.MeshStandardMaterial({ 
+        // Floating 3D Geometric Gold Shapes
+        const floatingObjects = [];
+        const geometries = [
+            new THREE.TorusGeometry(2.5, 0.6, 16, 50),
+            new THREE.IcosahedronGeometry(2, 0),
+            new THREE.OctahedronGeometry(2.2, 0)
+        ];
+
+        const goldMaterial = new THREE.MeshStandardMaterial({ 
             color: 0xd69e2e, 
-            roughness: 0.4, 
-            metalness: 0.8,
+            roughness: 0.3, 
+            metalness: 0.9,
             wireframe: true,
             transparent: true,
-            opacity: 0.15
+            opacity: 0.2
         });
 
-        for(let i = 0; i < 5; i++) {
-            const mesh = new THREE.Mesh(geom, mat);
-            mesh.position.x = (Math.random() - 0.5) * 80;
-            mesh.position.y = (Math.random() - 0.5) * 80;
-            mesh.position.z = (Math.random() - 0.5) * 40 - 20;
+        for(let i = 0; i < 6; i++) {
+            const mesh = new THREE.Mesh(geometries[i % geometries.length], goldMaterial);
+            mesh.position.x = (Math.random() - 0.5) * 90;
+            mesh.position.y = (Math.random() - 0.5) * 90;
+            mesh.position.z = (Math.random() - 0.5) * 50 - 10;
             
             mesh.rotation.x = Math.random() * Math.PI;
             mesh.rotation.y = Math.random() * Math.PI;
             
             scene.add(mesh);
-            objects.push(mesh);
+            floatingObjects.push(mesh);
         }
 
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        // Lighting System
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
         scene.add(ambientLight);
         
-        const pointLight = new THREE.PointLight(0xd69e2e, 1);
-        pointLight.position.set(20, 20, 20);
+        const pointLight = new THREE.PointLight(0xf6e05e, 1.2, 100);
+        pointLight.position.set(25, 25, 25);
         scene.add(pointLight);
 
-        // Mouse interaction for particles
-        let mouseX = 0;
-        let mouseY = 0;
-        let targetX = 0;
-        let targetY = 0;
-
-        document.addEventListener('mousemove', (event) => {
-            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+        // Mouse Parallax Logic
+        let mouseX = 0, mouseY = 0;
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
         });
 
-        // Animation Loop
         const clock = new THREE.Clock();
 
         function animate() {
             requestAnimationFrame(animate);
             const elapsedTime = clock.getElapsedTime();
 
-            // Rotate particles slowly
-            particlesMesh.rotation.y = elapsedTime * 0.05;
-            particlesMesh.rotation.x = elapsedTime * 0.02;
+            particlesMesh.rotation.y = elapsedTime * 0.03;
+            particlesMesh.rotation.x = elapsedTime * 0.015;
 
-            // Parallax effect on mouse move
-            targetX = mouseX * 0.5;
-            targetY = mouseY * 0.5;
-            particlesMesh.rotation.y += 0.05 * (targetX - particlesMesh.rotation.y);
-            particlesMesh.rotation.x += 0.05 * (targetY - particlesMesh.rotation.x);
+            particlesMesh.rotation.y += 0.03 * (mouseX * 0.3 - particlesMesh.rotation.y);
+            particlesMesh.rotation.x += 0.03 * (-mouseY * 0.3 - particlesMesh.rotation.x);
 
-            // Animate larger floating objects
-            objects.forEach((obj, ndx) => {
-                obj.rotation.x += 0.002 * (ndx + 1);
-                obj.rotation.y += 0.003 * (ndx + 1);
-                obj.position.y += Math.sin(elapsedTime * 0.5 + ndx) * 0.02;
+            floatingObjects.forEach((obj, idx) => {
+                obj.rotation.x += 0.003 * (idx + 1);
+                obj.rotation.y += 0.004 * (idx + 1);
+                obj.position.y += Math.sin(elapsedTime * 0.6 + idx) * 0.015;
             });
 
             renderer.render(scene, camera);
         }
 
-        animate();
-
-        // Handle Resize
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        /* -------------------------------------------
-           2. 3D CSS TILT CARDS LOGIC (VANILLA JS)
-        ------------------------------------------- */
+        window.onload = function() {
+            animate();
+        };
+
+        /* -------------------------------------------------------------
+           2. 3D CSS TILT CARDS LOGIC
+        ------------------------------------------------------------- */
         const cards = document.querySelectorAll('.tilt-card');
 
         cards.forEach(card => {
             card.addEventListener('mousemove', e => {
                 const rect = card.getBoundingClientRect();
-                // Get mouse position relative to card center
                 const x = e.clientX - rect.left - rect.width / 2;
                 const y = e.clientY - rect.top - rect.height / 2;
                 
-                // Calculate rotation (adjust multiplier for intensity)
-                const rotateX = (y / (rect.height / 2)) * -15; // Max 15deg
-                const rotateY = (x / (rect.width / 2)) * 15;  // Max 15deg
+                const rotateX = (y / (rect.height / 2)) * -12;
+                const rotateY = (x / (rect.width / 2)) * 12;
 
                 card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
             });
 
             card.addEventListener('mouseleave', () => {
-                // Reset card on mouse leave
-                card.style.transform = 'rotateX(0) rotateY(0)';
-                card.style.transition = 'transform 0.5s ease-out'; // Slower transition back to 0
-                
-                // Reset transition back to fast for next hover
-                setTimeout(() => {
-                    card.style.transition = 'transform 0.1s ease-out';
-                }, 500);
+                card.style.transform = 'rotateX(0deg) rotateY(0deg)';
             });
         });
 
-        /* -------------------------------------------
-           3. NAVBAR SCROLL EFFECT & MOBILE MENU
-        ------------------------------------------- */
-        const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar.classList.add('py-2', 'bg-black/80');
-                navbar.classList.remove('py-4', 'bg-black/40');
+        /* -------------------------------------------------------------
+           3. DEDICATED NEW WINDOW OPENER FOR "YANGILIKLAR"
+        ------------------------------------------------------------- */
+        function openNewsWindow() {
+            const newsWindow = window.open('', '_blank');
+            if (!newsWindow) {
+                showToast("Brauzer blokladi", "Iltimos, qalqib chiquvchi oynalarga ruxsat bering!");
+                return;
+            }
+
+            // Synthesize full styled HTML document for the new tab
+            const newsHTML = `
+                <!DOCTYPE html>
+                <html lang="uz">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Durdona Restorani - So'nggi Yangiliklar va Aksiyalar</title>
+                    <script src="https://cdn.tailwindcss.com"><\/script>
+                    <script>
+                        tailwind.config = {
+                            theme: {
+                                extend: {
+                                    colors: {
+                                        gold: { 400: '#f6e05e', 500: '#ecc94b', 600: '#d69e2e' },
+                                        dark: { 900: '#050505', 800: '#0a0a0a', 700: '#141414' }
+                                    }
+                                }
+                            }
+                        }
+                    <\/script>
+                    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                    <style>
+                        body { background-color: #050505; color: #fff; font-family: 'Poppins', sans-serif; }
+                        .gold-gradient { background: linear-gradient(135deg, #f6e05e, #b7791f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+                    </style>
+                </head>
+                <body class="p-6 md:p-12 min-h-screen">
+                    <div class="max-w-6xl mx-auto">
+                        <!-- Header -->
+                        <div class="flex flex-col sm:flex-row justify-between items-center border-b border-gold-500/30 pb-6 mb-10 gap-4">
+                            <div>
+                                <span class="text-gold-500 uppercase tracking-widest text-xs font-bold block mb-1">Durdona Restorani Rasmiy Yangiliklar Portali</span>
+                                <h1 class="text-3xl md:text-5xl font-serif font-bold gold-gradient">So'nggi Yangiliklar & Aksiyalar</h1>
+                            </div>
+                            <button onclick="window.close()" class="px-5 py-2.5 rounded-full bg-white/10 hover:bg-gold-500 hover:text-black text-xs font-bold uppercase transition-all flex items-center gap-2">
+                                <i class="fas fa-times"></i> Oynani Yopish
+                            </button>
+                        </div>
+
+                        <!-- Main News Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            
+                            <!-- Article 1 -->
+                            <div class="bg-dark-700 border border-gold-500/30 rounded-2xl overflow-hidden hover:border-gold-500 transition-all flex flex-col justify-between">
+                                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80" alt="Bahoriy Menyu" class="w-full h-48 object-cover">
+                                <div class="p-6 flex-1 flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex items-center gap-2 text-gold-400 text-xs mb-2">
+                                            <i class="far fa-calendar-alt"></i> <span>2026-yil, Mart</span>
+                                            <span class="bg-gold-500/20 px-2 py-0.5 rounded text-[10px] font-bold">YANGI MENYU</span>
+                                        </div>
+                                        <h2 class="text-xl font-serif font-bold mb-3 text-white">Yangi Bahoriy Mualliflik Menyusi Taqdim Etiildi</h2>
+                                        <p class="text-gray-400 text-xs leading-relaxed mb-4">Chef oshpazimiz tomonidan maxsus tayyorlangan bahoriy ko'katli somsa va organik go'shtli taomlar seriyasi taqdim etildi.</p>
+                                    </div>
+                                    <span class="text-gold-400 text-xs font-bold flex items-center gap-1 cursor-pointer hover:underline">Batafsil o'qish <i class="fas fa-arrow-right text-[10px]"></i></span>
+                                </div>
+                            </div>
+
+                            <!-- Article 2 -->
+                            <div class="bg-dark-700 border border-gold-500/30 rounded-2xl overflow-hidden hover:border-gold-500 transition-all flex flex-col justify-between">
+                                <img src="https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=800&q=80" alt="Jonli Jazz" class="w-full h-48 object-cover">
+                                <div class="p-6 flex-1 flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex items-center gap-2 text-gold-400 text-xs mb-2">
+                                            <i class="far fa-calendar-alt"></i> <span>Har Juma va Shanba</span>
+                                            <span class="bg-gold-500/20 px-2 py-0.5 rounded text-[10px] font-bold">TADBIR</span>
+                                        </div>
+                                        <h2 class="text-xl font-serif font-bold mb-3 text-white">Jonli Jazz va Saxophone Oqshomlari</h2>
+                                        <p class="text-gray-400 text-xs leading-relaxed mb-4">Har haftaning dam olish kunlari kechki soat 19:00 dan boshlab shahrimizning eng iqtidorli sozandalari jonli ijro bilan xizmatingizda.</p>
+                                    </div>
+                                    <span class="text-gold-400 text-xs font-bold flex items-center gap-1 cursor-pointer hover:underline">Batafsil o'qish <i class="fas fa-arrow-right text-[10px]"></i></span>
+                                </div>
+                            </div>
+
+                            <!-- Article 3 -->
+                            <div class="bg-dark-700 border border-gold-500/30 rounded-2xl overflow-hidden hover:border-gold-500 transition-all flex flex-col justify-between">
+                                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80" alt="VIP Zallar" class="w-full h-48 object-cover">
+                                <div class="p-6 flex-1 flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex items-center gap-2 text-gold-400 text-xs mb-2">
+                                            <i class="far fa-calendar-alt"></i> <span>Aksiya Muddati: Shu hafta</span>
+                                            <span class="bg-gold-500/20 px-2 py-0.5 rounded text-[10px] font-bold">AKSIYA</span>
+                                        </div>
+                                        <h2 class="text-xl font-serif font-bold mb-3 text-white">VIP Xonalar Uchun 20% Chegirma</h2>
+                                        <p class="text-gray-400 text-xs leading-relaxed mb-4">Oila va biznes uchrashuvlari uchun mo'ljallangan shohona VIP xonalarimizni oldindan band qiling va maxsus chegirmaga ega bo'ling.</p>
+                                    </div>
+                                    <span class="text-gold-400 text-xs font-bold flex items-center gap-1 cursor-pointer hover:underline">Batafsil o'qish <i class="fas fa-arrow-right text-[10px]"></i></span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Footer Note -->
+                        <div class="mt-12 p-6 rounded-2xl bg-dark-800 border border-white/10 text-center text-xs text-gray-400">
+                            Stol band qilish uchun qo'ng'iroq qiling: <strong class="text-gold-400">+998 (71) 200-88-88</strong> &bull; Durdona Restorani Toshkent
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `;
+
+            newsWindow.document.write(newsHTML);
+            newsWindow.document.close();
+            showToast("Yangi Oyna Ochildi", "Yangiliklar va Aksiyalar sahifasi yuklandi.");
+        }
+
+        /* -------------------------------------------------------------
+           4. UI & NAVIGATION HANDLERS
+        ------------------------------------------------------------- */
+        // Mobile Drawer Menu Toggle
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileIcon = document.getElementById('mobile-icon');
+
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            if(mobileMenu.classList.contains('hidden')) {
+                mobileIcon.className = 'fas fa-bars';
             } else {
-                navbar.classList.add('py-4', 'bg-black/40');
-                navbar.classList.remove('py-2', 'bg-black/80');
+                mobileIcon.className = 'fas fa-times';
             }
         });
 
-        // Simplified Mobile Menu alert (since alert() is forbidden, doing nothing or logging)
-        const mobileBtn = document.getElementById('mobile-menu-btn');
-        mobileBtn.addEventListener('click', () => {
-            console.log("Mobile menu toggled");
-            // In a full app, this would toggle a mobile menu dropdown container.
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                mobileIcon.className = 'fas fa-bars';
+            });
         });
-        
+
+        // Navbar Scroll Blur Effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('py-2', 'bg-black/90');
+                navbar.classList.remove('py-4', 'bg-black/60');
+            } else {
+                navbar.classList.add('py-4', 'bg-black/60');
+                navbar.classList.remove('py-2', 'bg-black/90');
+            }
+        });
+
+        // Menu Filtering Logic
+        function filterMenu(category) {
+            const buttons = document.querySelectorAll('.menu-tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-gold-600', 'text-black', 'shadow-lg');
+                btn.classList.add('bg-white/5', 'text-gray-300');
+            });
+
+            event.target.classList.add('bg-gold-600', 'text-black', 'shadow-lg');
+            event.target.classList.remove('bg-white/5', 'text-gray-300');
+
+            const items = document.querySelectorAll('.menu-item');
+            items.forEach(item => {
+                if (category === 'all' || item.getAttribute('data-category') === category) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Dish Detail Modal
+        function showDishDetails(title, price, desc) {
+            document.getElementById('modal-dish-title').innerText = title;
+            document.getElementById('modal-dish-price').innerText = price;
+            document.getElementById('modal-dish-desc').innerText = desc;
+            const modal = document.getElementById('dish-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeDishModal() {
+            const modal = document.getElementById('dish-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Table Reservation Form Handling
+        function handleReservation(e) {
+            e.preventDefault();
+            const name = document.getElementById('res-name').value;
+            const guests = document.getElementById('res-guests').value;
+            
+            showToast("Buyurtma Qabul Qilindi!", `Rahmat ${name}! ${guests} uchun stolingiz band qilindi.`);
+            document.getElementById('reservation-form').reset();
+        }
+
+        // Custom Notification Toast Function
+        function showToast(title, message) {
+            const toast = document.getElementById('notification-toast');
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-message').innerText = message;
+            
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 4500);
+        }
     </script>
 </body>
 </html>

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="uz" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Durdona Restorani | 3D Veb-sayt</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            400: '#f6e05e',
+                            500: '#ecc94b',
+                            600: '#d69e2e',
+                            700: '#b7791f',
+                        },
+                        dark: '#0a0a0a'
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Poppins"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Custom CSS for 3D Effects and Animations -->
+    <style>
+        body {
+            margin: 0;
+            overflow-x: hidden;
+            background-color: #0a0a0a;
+            color: #ffffff;
+        }
+
+        /* 3D Background Canvas */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none; /* Let clicks pass through to content */
+        }
+
+        /* Gradient Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, transparent 0%, #0a0a0a 100%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* 3D Card Container */
+        .card-container {
+            perspective: 1000px;
+        }
+
+        /* The 3D Card */
+        .tilt-card {
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out; /* Smooth transition for JS mouse move */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.1);
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+        }
+
+        /* Card Content that pops out */
+        .card-content-3d {
+            transform: translateZ(60px); /* Pushes content towards the viewer */
+            transform-style: preserve-3d;
+        }
+        
+        .card-bg-image {
+            transform: translateZ(-20px) scale(1.05); /* Pushes image back to create depth */
+            transition: transform 0.3s ease;
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .floating-element {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d69e2e;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ecc94b;
+        }
+        
+        /* Gold Text Gradient */
+        .text-gradient-gold {
+            background: linear-gradient(to right, #f6e05e, #b7791f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-gold-600 selection:text-white">
+
+    <!-- WebGL Background -->
+    <canvas id="bg-canvas"></canvas>
+    <div class="overlay"></div>
+
+    <nav class="fixed w-full z-50 transition-all duration-300 backdrop-blur-md bg-black/40 border-b border-white/10" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-3xl font-serif font-bold text-white tracking-widest">
+                DUR<span class="text-gold-500">DONA</span>
+            </a>
+            <div class="hidden md:flex space-x-8 items-center">
+                <a href="#home" class="text-gray-300 hover:text-gold-400 transition-colors uppercase tracking-wider text-sm font-medium">Asosiy</a>
+                <a href="#menu" class="text-gray-300 hover:text-gold-400 transition-colors uppercase tracking-wider text-sm font-medium">Menyu</a>
+                <a href="#about" class="text-gray-300 hover:text-gold-400 transition-colors uppercase tracking-wider text-sm font-medium">Biz Haqimizda</a>
+                <a href="#contact" class="text-gray-300 hover:text-gold-400 transition-colors uppercase tracking-wider text-sm font-medium">Aloqa</a>
+                <a href="#contact" class="px-6 py-2 border border-gold-500 text-gold-500 hover:bg-gold-500 hover:text-black transition-all rounded-full uppercase tracking-wider text-sm font-semibold">Stol Band Qilish</a>
+            </div>
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-white text-2xl" id="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <section id="home" class="relative min-h-screen flex items-center justify-center pt-20 px-6">
+        <div class="text-center z-10 max-w-4xl mx-auto floating-element">
+            <p class="text-gold-400 uppercase tracking-[0.3em] mb-4 text-sm md:text-base font-semibold">Toshkentning yuragidagi betakror ta'm</p>
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-serif font-bold mb-6 leading-tight">
+                <span class="text-gradient-gold">Durdona</span> <br>
+                Restorani
+            </h1>
+            <p class="text-gray-300 text-lg md:text-xl mb-10 max-w-2xl mx-auto font-light">
+                O'zbek milliy taomlari va yevropa oshxonasining eng sara namunalarini zamonaviy dizayn va yuqori darajadagi xizmat ko'rsatish bilan birga tatib ko'ring.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#menu" class="px-8 py-4 bg-gold-600 hover:bg-gold-500 text-black font-semibold rounded-full transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(214,158,46,0.4)]">
+                    Menyuni Ko'rish
+                </a>
+                <a href="#contact" class="px-8 py-4 border border-white/30 hover:border-gold-500 hover:text-gold-400 text-white font-semibold rounded-full transition-all backdrop-blur-sm">
+                    Stol Band Qilish
+                </a>
+            </div>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a href="#menu" class="text-white/50 hover:text-gold-500 transition-colors">
+                <i class="fas fa-chevron-down text-2xl"></i>
+            </a>
+        </div>
+    </section>
+
+    <section id="menu" class="py-24 relative z-10 bg-black/60 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <p class="text-gold-500 uppercase tracking-widest mb-2 font-medium">Kashf eting</p>
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-white">Bizning Menyu</h2>
+                <div class="h-1 w-24 bg-gold-600 mx-auto mt-6 rounded-full"></div>
+            </div>
+
+            <!-- 3D Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                
+                <!-- Card 1 -->
+                <div class="card-container w-full h-[450px]">
+                    <div class="tilt-card w-full h-full relative overflow-hidden flex flex-col justify-end p-6 cursor-pointer group">
+                        <!-- Background Image -->
+                        <div class="absolute inset-0 bg-cover bg-center card-bg-image opacity-60 group-hover:opacity-80 transition-opacity" style="background-image: url('https://placehold.co/600x800/1a1a1a/d69e2e?text=Shohona+Palov');"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                        
+                        <!-- 3D Content -->
+                        <div class="card-content-3d relative z-10">
+                            <h3 class="text-3xl font-serif font-bold text-white mb-2">Shohona Palov</h3>
+                            <p class="text-gray-300 mb-4 font-light text-sm">Haqiqiy devzira guruchidan tayyorlangan, lahm go'sht va bedana tuxumi bilan bezatilgan shohona taom.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gold-400 font-bold text-xl">120,000 UZS</span>
+                                <button class="w-10 h-10 rounded-full bg-white/10 hover:bg-gold-500 hover:text-black flex items-center justify-center transition-colors backdrop-blur-sm">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="card-container w-full h-[450px]">
+                    <div class="tilt-card w-full h-full relative overflow-hidden flex flex-col justify-end p-6 cursor-pointer group">
+                        <div class="absolute inset-0 bg-cover bg-center card-bg-image opacity-60 group-hover:opacity-80 transition-opacity" style="background-image: url('https://placehold.co/600x800/1a1a1a/d69e2e?text=Qozon+Kabob');"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                        <div class="card-content-3d relative z-10">
+                            <h3 class="text-3xl font-serif font-bold text-white mb-2">Qozon Kabob</h3>
+                            <p class="text-gray-300 mb-4 font-light text-sm">Yumshoq qo'y go'shti va qovurilgan kartoshka, o'ziga xos ziravorlar bilan dimlab pishirilgan.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gold-400 font-bold text-xl">150,000 UZS</span>
+                                <button class="w-10 h-10 rounded-full bg-white/10 hover:bg-gold-500 hover:text-black flex items-center justify-center transition-colors backdrop-blur-sm">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="card-container w-full h-[450px]">
+                    <div class="tilt-card w-full h-full relative overflow-hidden flex flex-col justify-end p-6 cursor-pointer group">
+                        <div class="absolute inset-0 bg-cover bg-center card-bg-image opacity-60 group-hover:opacity-80 transition-opacity" style="background-image: url('https://placehold.co/600x800/1a1a1a/d69e2e?text=Tandir+Somsa');"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                        <div class="card-content-3d relative z-10">
+                            <h3 class="text-3xl font-serif font-bold text-white mb-2">Tandir Somsa</h3>
+                            <p class="text-gray-300 mb-4 font-light text-sm">Qatlamali xamir va sersuv go'sht, haqiqiy o'zbek tandirida qizartirib yopilgan maxsus somsa.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gold-400 font-bold text-xl">25,000 UZS</span>
+                                <button class="w-10 h-10 rounded-full bg-white/10 hover:bg-gold-500 hover:text-black flex items-center justify-center transition-colors backdrop-blur-sm">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="mt-16 text-center">
+                <a href="#" class="inline-flex items-center gap-2 text-gold-500 hover:text-gold-400 transition-colors uppercase tracking-widest font-semibold border-b border-gold-500 pb-1">
+                    To'liq menyuni yuklab olish <i class="fas fa-download"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-24 relative z-10">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-16">
+            <div class="w-full lg:w-1/2">
+                <div class="relative w-full h-[500px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+                    <img src="https://placehold.co/800x1000/0a0a0a/d69e2e?text=Restoran+Ichki+Ko'rinishi" alt="Restoran Ichkarisi" class="object-cover w-full h-full opacity-70 hover:opacity-100 transition-opacity duration-500">
+                    <!-- Floating Badge -->
+                    <div class="absolute -bottom-6 -right-6 bg-gold-600 text-black p-8 rounded-full w-40 h-40 flex flex-col items-center justify-center shadow-2xl floating-element border-4 border-black">
+                        <span class="text-4xl font-serif font-bold">15+</span>
+                        <span class="text-sm uppercase tracking-wider font-semibold text-center">Yillik <br> Tajriba</span>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full lg:w-1/2">
+                <p class="text-gold-500 uppercase tracking-widest mb-2 font-medium">Tariximiz</p>
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-white mb-6">Nafosat va An'analar</h2>
+                <p class="text-gray-300 mb-6 leading-relaxed font-light">
+                    "Durdona" restorani 2008 yildan buyon tashrif buyuruvchilarga xizmat ko'rsatib kelmoqda. Bizning maqsadimiz – har bir mehmonga shunchaki ovqatlanish emas, balki unutilmas hissiyotlarni ulashishdir.
+                </p>
+                <p class="text-gray-300 mb-8 leading-relaxed font-light">
+                    Mohir oshpazlarimiz asrlar davomida shakllangan o'zbek milliy taomlari retseptlarini zamonaviy uslub bilan uyg'unlashtirgan holda sizga tortiq etishadi. Interyerimiz esa milliy naqshlar va yevropacha klassikani o'zida mujassam etgan.
+                </p>
+                
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="bg-white/5 border border-white/10 p-4 rounded-xl backdrop-blur-sm">
+                        <i class="fas fa-award text-gold-500 text-3xl mb-3"></i>
+                        <h4 class="text-white font-serif text-xl mb-1">Oliy Sifat</h4>
+                        <p class="text-gray-400 text-sm">Faqat yangi va tabiiy mahsulotlar</p>
+                    </div>
+                    <div class="bg-white/5 border border-white/10 p-4 rounded-xl backdrop-blur-sm">
+                        <i class="fas fa-music text-gold-500 text-3xl mb-3"></i>
+                        <h4 class="text-white font-serif text-xl mb-1">Jonli Ijro</h4>
+                        <p class="text-gray-400 text-sm">Har oqshom jonli musiqa sadolari</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-24 relative z-10 bg-black/80 backdrop-blur-lg border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <p class="text-gold-500 uppercase tracking-widest mb-2 font-medium">Tashrif buyuring</p>
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-white">Biz bilan Aloqa</h2>
+                <div class="h-1 w-24 bg-gold-600 mx-auto mt-6 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Contact Info -->
+                <div class="space-y-8">
+                    <div class="flex items-start gap-6 group">
+                        <div class="w-16 h-16 rounded-full bg-white/5 border border-gold-500/30 flex items-center justify-center text-gold-500 text-2xl group-hover:bg-gold-500 group-hover:text-black transition-all">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-serif text-white mb-2">Manzil</h4>
+                            <p class="text-gray-400">Toshkent shahri, Amir Temur shoh ko'chasi, 12-uy.<br>Mo'ljal: Markaziy xiyobon yonida.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-6 group">
+                        <div class="w-16 h-16 rounded-full bg-white/5 border border-gold-500/30 flex items-center justify-center text-gold-500 text-2xl group-hover:bg-gold-500 group-hover:text-black transition-all">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-serif text-white mb-2">Telefon</h4>
+                            <p class="text-gray-400">+998 71 234 56 78</p>
+                            <p class="text-gray-400">+998 90 123 45 67 (Band qilish)</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-6 group">
+                        <div class="w-16 h-16 rounded-full bg-white/5 border border-gold-500/30 flex items-center justify-center text-gold-500 text-2xl group-hover:bg-gold-500 group-hover:text-black transition-all">
+                            <i class="far fa-clock"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-serif text-white mb-2">Ish vaqti</h4>
+                            <p class="text-gray-400">Dushanba - Yakshanba: 10:00 - 23:00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reservation Form (3D styling) -->
+                <div class="bg-white/5 border border-white/10 p-8 rounded-2xl backdrop-blur-md relative overflow-hidden">
+                    <div class="absolute -top-20 -right-20 w-40 h-40 bg-gold-600 rounded-full blur-3xl opacity-20"></div>
+                    <h3 class="text-2xl font-serif text-white mb-6">Stol Band Qilish</h3>
+                    <form class="space-y-4 relative z-10" onsubmit="event.preventDefault(); alert('So\'rovingiz qabul qilindi. Tez orada siz bilan bog\'lanamiz!');">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <input type="text" placeholder="Ismingiz" required class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors">
+                            <input type="tel" placeholder="Telefon raqam" required class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors">
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <input type="date" required class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors [color-scheme:dark]">
+                            <select class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors appearance-none">
+                                <option>2 Kishi</option>
+                                <option>4 Kishi</option>
+                                <option>6 Kishi</option>
+                                <option>8+ Kishi</option>
+                            </select>
+                        </div>
+                        <textarea placeholder="Qo'shimcha istaklar (ixtiyoriy)" rows="3" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors resize-none"></textarea>
+                        <button type="submit" class="w-full bg-gold-600 hover:bg-gold-500 text-black font-semibold rounded-lg px-6 py-4 transition-all shadow-lg shadow-gold-600/20">
+                            Band Qilish
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-black py-8 border-t border-white/10 relative z-10 text-center">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-center space-x-6 mb-6">
+                <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:text-gold-500 hover:bg-white/10 transition-colors">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:text-gold-500 hover:bg-white/10 transition-colors">
+                    <i class="fab fa-telegram-plane"></i>
+                </a>
+                <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:text-gold-500 hover:bg-white/10 transition-colors">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+            </div>
+            <p class="text-gray-500 text-sm">
+                &copy; 2023 Durdona Restorani. Barcha huquqlar himoyalangan.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        /* -------------------------------------------
+           1. THREE.JS 3D BACKGROUND ANIMATION
+        ------------------------------------------- */
+        const canvas = document.querySelector('#bg-canvas');
+        const scene = new THREE.Scene();
+        
+        // Add subtle fog to blend objects into the dark background
+        scene.fog = new THREE.FogExp2(0x0a0a0a, 0.001);
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+        
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.position.z = 50;
+
+        // Particle System (Stars/Dust)
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 700;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for(let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 200; // spread
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.1,
+            color: '#ecc94b',
+            transparent: true,
+            opacity: 0.5,
+            blending: THREE.AdditiveBlending
+        });
+
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+
+        // Floating Gold Geometries (Elegant Touch)
+        const objects = [];
+        const geom = new THREE.TorusGeometry(2, 0.5, 16, 100);
+        const mat = new THREE.MeshStandardMaterial({ 
+            color: 0xd69e2e, 
+            roughness: 0.4, 
+            metalness: 0.8,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.15
+        });
+
+        for(let i = 0; i < 5; i++) {
+            const mesh = new THREE.Mesh(geom, mat);
+            mesh.position.x = (Math.random() - 0.5) * 80;
+            mesh.position.y = (Math.random() - 0.5) * 80;
+            mesh.position.z = (Math.random() - 0.5) * 40 - 20;
+            
+            mesh.rotation.x = Math.random() * Math.PI;
+            mesh.rotation.y = Math.random() * Math.PI;
+            
+            scene.add(mesh);
+            objects.push(mesh);
+        }
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+        
+        const pointLight = new THREE.PointLight(0xd69e2e, 1);
+        pointLight.position.set(20, 20, 20);
+        scene.add(pointLight);
+
+        // Mouse interaction for particles
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+        });
+
+        // Animation Loop
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+
+            // Rotate particles slowly
+            particlesMesh.rotation.y = elapsedTime * 0.05;
+            particlesMesh.rotation.x = elapsedTime * 0.02;
+
+            // Parallax effect on mouse move
+            targetX = mouseX * 0.5;
+            targetY = mouseY * 0.5;
+            particlesMesh.rotation.y += 0.05 * (targetX - particlesMesh.rotation.y);
+            particlesMesh.rotation.x += 0.05 * (targetY - particlesMesh.rotation.x);
+
+            // Animate larger floating objects
+            objects.forEach((obj, ndx) => {
+                obj.rotation.x += 0.002 * (ndx + 1);
+                obj.rotation.y += 0.003 * (ndx + 1);
+                obj.position.y += Math.sin(elapsedTime * 0.5 + ndx) * 0.02;
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        /* -------------------------------------------
+           2. 3D CSS TILT CARDS LOGIC (VANILLA JS)
+        ------------------------------------------- */
+        const cards = document.querySelectorAll('.tilt-card');
+
+        cards.forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                // Get mouse position relative to card center
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                // Calculate rotation (adjust multiplier for intensity)
+                const rotateX = (y / (rect.height / 2)) * -15; // Max 15deg
+                const rotateY = (x / (rect.width / 2)) * 15;  // Max 15deg
+
+                card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                // Reset card on mouse leave
+                card.style.transform = 'rotateX(0) rotateY(0)';
+                card.style.transition = 'transform 0.5s ease-out'; // Slower transition back to 0
+                
+                // Reset transition back to fast for next hover
+                setTimeout(() => {
+                    card.style.transition = 'transform 0.1s ease-out';
+                }, 500);
+            });
+        });
+
+        /* -------------------------------------------
+           3. NAVBAR SCROLL EFFECT & MOBILE MENU
+        ------------------------------------------- */
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('py-2', 'bg-black/80');
+                navbar.classList.remove('py-4', 'bg-black/40');
+            } else {
+                navbar.classList.add('py-4', 'bg-black/40');
+                navbar.classList.remove('py-2', 'bg-black/80');
+            }
+        });
+
+        // Simplified Mobile Menu alert (since alert() is forbidden, doing nothing or logging)
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        mobileBtn.addEventListener('click', () => {
+            console.log("Mobile menu toggled");
+            // In a full app, this would toggle a mobile menu dropdown container.
+        });
+        
+    </script>
+</body>
+</html>

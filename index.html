@@ -1,112 +1,1221 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="uz" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ISFT Instituti - Asosiy Sahifa</title>
+    <title>UniLaunch Studio - Talabalar Startap Platformasi</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        },
+                        accent: {
+                            500: '#06b6d4',
+                            600: '#0891b2',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(229, 231, 235, 0.5);
         }
-        body {
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+        .dark .glass-card {
+            background: rgba(17, 24, 39, 0.85);
+            border: 1px solid rgba(55, 65, 81, 0.5);
         }
-        .container {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 40px;
-            max-width: 600px;
-            width: 100%;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            text-align: center;
+        .gradient-text {
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            color: #00d2ff;
+        .gradient-bg {
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
         }
-        p {
-            color: #cfd8dc;
-            margin-bottom: 30px;
-            font-size: 15px;
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
         }
-        .menu {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .btn {
-            background: linear-gradient(90deg, #0072ff, #00c6ff);
-            color: white;
-            padding: 14px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 114, 255, 0.4);
-            display: inline-block;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 198, 255, 0.6);
-            background: linear-gradient(90deg, #00c6ff, #0072ff);
-        }
-        .btn-3d {
-            background: linear-gradient(90deg, #f7971e, #ffd200);
-            box-shadow: 0 4px 15px rgba(247, 151, 30, 0.4);
-            color: #1a1a1a;
-        }
-        .btn-3d:hover {
-            background: linear-gradient(90deg, #ffd200, #f7971e);
-            box-shadow: 0 6px 20px rgba(255, 210, 0, 0.6);
-        }
-        footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #90a4ae;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans antialiased selection:bg-brand-500 selection:text-white transition-colors duration-300">
 
-    <div class="container">
-        <h1>ISFT Instituti</h1>
-        <p>Kerakli bo'limni tanlang:</p>
+    <!-- Header / Nav -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Brand Logo -->
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="w-11 h-11 rounded-xl gradient-bg flex items-center justify-center text-white shadow-lg shadow-brand-500/30 group-hover:scale-105 transition-transform duration-300">
+                        <i class="fa-solid font-bold fa-rocket text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">Uni<span class="text-brand-600 dark:text-brand-500">Launch</span></span>
+                        <span class="block text-[10px] font-semibold text-slate-400 uppercase tracking-widest -mt-1">Studio Startap</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="#home" class="text-sm font-semibold hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Asosiy</a>
+                    <a href="#about" class="text-sm font-semibold hover:text-brand-600 dark:hover:text-brand-400 transition-colors">G'oya va Tarix</a>
+                    <a href="#services" class="text-sm font-semibold hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Xizmatlar</a>
+                    <a href="#slides" class="text-sm font-semibold hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Taqdimot</a>
+                    <a href="#pricing" class="text-sm font-semibold hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Narxlar</a>
+                    <a href="#feedback" class="text-sm font-semibold hover:text-brand-600 dark:hover:text-brand-400 transition-colors">So'rovnoma</a>
+                    <a href="#contact" class="text-sm font-semibold hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Bog'lanish</a>
+                </nav>
+
+                <!-- Actions -->
+                <div class="hidden md:flex items-center gap-4">
+                    <!-- Theme Toggle -->
+                    <button id="themeToggle" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="Rejimni o'zgartirish">
+                        <i class="fa-solid fa-moon dark:hidden"></i>
+                        <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
+                    </button>
+
+                    <!-- Order Modal CTA -->
+                    <button onclick="openOrderModal('Umumiy Murojaat')" class="gradient-bg text-white px-5 py-2.5 rounded-xl font-semibold shadow-md shadow-brand-500/20 hover:opacity-95 hover:shadow-lg transition-all duration-300 flex items-center gap-2">
+                        <i class="fa-solid fa-paper-plane text-xs"></i>
+                        <span>Buyurtma Berish</span>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="flex items-center gap-2 md:hidden">
+                    <button id="themeToggleMobile" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                        <i class="fa-solid fa-moon dark:hidden"></i>
+                        <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
+                    </button>
+                    <button id="mobileMenuBtn" class="p-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Drawer -->
+        <div id="mobileMenu" class="hidden md:hidden border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 pt-2 pb-6 space-y-3">
+            <a href="#home" class="mobile-link block px-3 py-2 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">Asosiy</a>
+            <a href="#about" class="mobile-link block px-3 py-2 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">G'oya va Tarix</a>
+            <a href="#services" class="mobile-link block px-3 py-2 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">Xizmatlar</a>
+            <a href="#slides" class="mobile-link block px-3 py-2 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">Taqdimot</a>
+            <a href="#pricing" class="mobile-link block px-3 py-2 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">Narxlar</a>
+            <a href="#feedback" class="mobile-link block px-3 py-2 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">So'rovnoma</a>
+            <a href="#contact" class="mobile-link block px-3 py-2 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">Bog'lanish</a>
+            <button onclick="openOrderModal('Murojaat Mobile'); toggleMobileMenu();" class="w-full mt-2 gradient-bg text-white py-3 rounded-xl font-semibold shadow-md flex items-center justify-center gap-2">
+                <i class="fa-solid fa-paper-plane"></i> Buyurtma Berish
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative pt-12 pb-20 md:pt-24 md:pb-32 overflow-hidden">
+        <!-- Background Decorative Elements -->
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-brand-500/20 to-accent-500/20 rounded-full blur-3xl -z-10"></div>
         
-        <div class="menu">
-            <!-- 1. So'rovnoma -->
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfKzwNz6ofgDcYJozKKUhkTg1D10slLco2yZsyTPy4Lojor7w/viewform?usp=header" target="_blank" class="btn">📝 5 ta institut haqida so'rovnoma</a>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left Column Text -->
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-50 dark:bg-brand-900/40 border border-brand-200 dark:border-brand-700/50 text-brand-600 dark:text-brand-300 text-xs sm:text-sm font-semibold">
+                        <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-ping"></span>
+                        <i class="fa-solid fa-graduation-cap"></i> Talabalar Tomonidan Yaratilgan Startap
+                    </div>
+
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.15]">
+                        Raqamli G'oyalarni <br>
+                        <span class="gradient-text">Yangi Bosqichga</span> Olib Chiqamiz
+                    </h1>
+
+                    <p class="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                        Biz talabalar va kichik bizneslar uchun zamonaviy veb-saytlar, dizayn vizuallari hamda innovatsion pitch deck presentationlarni professional darajada tayyorlaymiz.
+                    </p>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                        <a href="#services" class="w-full sm:w-auto gradient-bg text-white px-8 py-4 rounded-xl font-bold shadow-lg shadow-brand-500/25 hover:shadow-xl hover:opacity-95 transition-all text-center flex items-center justify-center gap-3">
+                            <span>Xizmatlarni Ko'rish</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <a href="#slides" class="w-full sm:w-auto px-8 py-4 rounded-xl font-bold border border-slate-300 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-center flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-play text-brand-600 dark:text-brand-400"></i>
+                            <span>Taqdimotni Ko'rish</span>
+                        </a>
+                    </div>
+
+                    <!-- Metrics Badges -->
+                    <div class="pt-8 grid grid-cols-3 gap-4 border-t border-slate-200 dark:border-slate-800/80">
+                        <div>
+                            <div class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">15+</div>
+                            <div class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">Muvaffaqiyatli Loyiha</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">98%</div>
+                            <div class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">Ijobiy Fikrlar</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">24/7</div>
+                            <div class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">Texnik Qo'llab-quvvatlash</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column Interactive Hero Card -->
+                <div class="lg:col-span-5 relative">
+                    <div class="glass-card rounded-3xl p-6 shadow-2xl relative z-10 space-y-6">
+                        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-brand-100 dark:bg-brand-900/50 flex items-center justify-center text-brand-600 dark:text-brand-300 font-bold">
+                                    <i class="fa-solid fa-laptop-code"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-bold text-slate-900 dark:text-white">Startap Ekotizimi</h3>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400">Talaba g'oyasidan biznesgacha</p>
+                                </div>
+                            </div>
+                            <span class="text-xs px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 font-semibold">Faol</span>
+                        </div>
+
+                        <!-- Mini Interactive Service Selector Feature -->
+                        <div class="space-y-3">
+                            <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Tezkor Moslashtirish</label>
+                            <div class="p-3 bg-slate-100 dark:bg-slate-800/70 rounded-xl space-y-2">
+                                <div class="flex justify-between items-center text-xs font-medium">
+                                    <span>Loyiha Turini Tanlang:</span>
+                                    <span id="heroSelectedType" class="text-brand-600 dark:text-brand-400 font-bold">Landing Page</span>
+                                </div>
+                                <div class="grid grid-cols-3 gap-1.5 text-xs">
+                                    <button onclick="updateHeroPreview('Landing Page', '3 kun', '1.2 mln')" class="hero-chip px-2 py-1.5 rounded-lg bg-white dark:bg-slate-700 shadow-sm font-medium hover:bg-brand-50 border border-slate-200 dark:border-slate-600 text-center">Web</button>
+                                    <button onclick="updateHeroPreview('SMM Vizual', '1 kun', '400 ming')" class="hero-chip px-2 py-1.5 rounded-lg bg-white dark:bg-slate-700 shadow-sm font-medium hover:bg-brand-50 border border-slate-200 dark:border-slate-600 text-center">SMM</button>
+                                    <button onclick="updateHeroPreview('Pitch Deck', '2 kun', '800 ming')" class="hero-chip px-2 py-1.5 rounded-lg bg-white dark:bg-slate-700 shadow-sm font-medium hover:bg-brand-50 border border-slate-200 dark:border-slate-600 text-center">Slides</button>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center p-3 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-xs">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-clock text-brand-600 dark:text-brand-400"></i>
+                                    <span>Muddati: <strong id="heroTime" class="text-slate-900 dark:text-white">3 kun</strong></span>
+                                </div>
+                                <div>
+                                    <span>Boshlang'ich: <strong id="heroPrice" class="text-brand-600 dark:text-brand-300 font-bold">1.2 mln so'm</strong></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button onclick="openOrderModal('Tezkor Tanlov: ' + document.getElementById('heroSelectedType').innerText)" class="w-full py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+                            <span>Ushbu Tarifni Band Qilish</span>
+                            <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </button>
+                    </div>
+
+                    <!-- Floating Badge Decorative -->
+                    <div class="absolute -bottom-6 -left-6 glass-card p-4 rounded-2xl shadow-xl flex items-center gap-3 animate-float hidden sm:flex z-20">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-500 flex items-center justify-center">
+                            <i class="fa-solid fa-lightbulb text-lg"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-900 dark:text-white">Kreativ Yechimlar</p>
+                            <p class="text-[11px] text-slate-500">100% Student Startup</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Creation History & Ideas (Yaratilish Tarixi va G'oya) -->
+    <section id="about" class="py-20 bg-slate-100/70 dark:bg-slate-900/50 border-y border-slate-200 dark:border-slate-800 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
             
-            <!-- 2. 1-Taqdimot -->
-            <a href="https://docs.google.com/presentation/d/1S5nYMrX3QoUHDKmttdzyECRMEHQ-2feb8gkIsjPyU4k/edit?usp=sharing" target="_blank" class="btn">📊 1-Taqdimot: Institut haqida ma'lumot</a>
+            <div class="text-center max-w-3xl mx-auto space-y-3">
+                <span class="text-brand-600 dark:text-brand-400 text-xs font-bold uppercase tracking-wider">Startapimiz Hikoyasi</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">Loyihalarimiz Yaratilish Tarixi va G'oyasi</h2>
+                <p class="text-slate-600 dark:text-slate-300">
+                    Har bir amalga oshirgan ijodiy ishimiz zamirida muammoni hal qilish va innovatsion yondashuv yotadi. Quyida startapimizning asosiy ishlanmalari va ularning konseptsiyasi keltirilgan.
+                </p>
+            </div>
+
+            <!-- Timeline / Project Story Cards Grid -->
+            <div class="grid md:grid-cols-3 gap-8">
+                
+                <!-- Story Card 1 -->
+                <div class="glass-card rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 text-xs font-bold">2025 Oktyabr</span>
+                            <span class="text-2xl text-slate-300 dark:text-slate-700 group-hover:text-brand-500 transition-colors font-black">01</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white">UniLaunch Platformasi</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                            <strong class="text-slate-800 dark:text-slate-100">G'oyasi:</strong> Universitet talabalarining amaliy ko'nikmalarini oshirish va ularning startap xizmatlarini yagona platformada birlashtirish.
+                        </p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/60 p-3 rounded-xl">
+                            <i class="fa-solid fa-clock-rotate-left mr-1"></i> <strong>Yaratilish tarixi:</strong> Kompyuter injiniringi fakulteti talabalari tomonidan hackathon doirasida g'oya berilgan va 2 hafta ichida MVP holatiga keltirilgan.
+                        </p>
+                    </div>
+                    <div class="pt-6 border-t border-slate-200 dark:border-slate-800 mt-4">
+                        <button onclick="openStoryModal('UniLaunch Platformasi', 'Ushbu loyiha talabalarga o o‘z portfolio ishlarini joylash hamda mijozlardan buyurtmalarni to‘g‘ridan-to‘g‘ri qabul qilish imkonini beruvchi platforma sifatida shakllandi.')" class="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1">
+                            Batafsil o'qish <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Story Card 2 -->
+                <div class="glass-card rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full bg-accent-500/10 text-accent-600 dark:text-accent-500 text-xs font-bold">2025 Noyabr</span>
+                            <span class="text-2xl text-slate-300 dark:text-slate-700 group-hover:text-accent-500 transition-colors font-black">02</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white">Smart Slides Taqdimot Vizuali</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                            <strong class="text-slate-800 dark:text-slate-100">G'oyasi:</strong> Startaplar investorlar oldida nutq so'zlayotganda murakkab g'oyalarni sodda, vizual va ta'sirchan slaydlar orqali ko'rsatib berishi uchun interaktiv shablonlar tizimi.
+                        </p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/60 p-3 rounded-xl">
+                            <i class="fa-solid fa-clock-rotate-left mr-1"></i> <strong>Yaratilish tarixi:</strong> Bir qancha talabalar startap taqdimotlarida investorlar e'tiborini torta olmagani kuzatilib, aynan pitch-deck tayyorlash xizmati yo'lga qo'yildi.
+                        </p>
+                    </div>
+                    <div class="pt-6 border-t border-slate-200 dark:border-slate-800 mt-4">
+                        <button onclick="openStoryModal('Smart Slides Vizuali', 'Biz investorlar va hakamlar diqqatini jalb qilish uchun maxsus psixologik ranglar jamlanmasi va visual hierarchy qoidalariga asoslangan slaydlarni ishlab chiqdik.')" class="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1">
+                            Batafsil o'qish <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Story Card 3 -->
+                <div class="glass-card rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 text-xs font-bold">2026 Yanvar</span>
+                            <span class="text-2xl text-slate-300 dark:text-slate-700 group-hover:text-emerald-500 transition-colors font-black">03</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white">Quick Feedback & Survey System</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                            <strong class="text-slate-800 dark:text-slate-100">G'oyasi:</strong> Mahsulot yoki xizmat chiqargandan so'ng mijozlar fikrini Google Forms orqali tezkor yig'ish va ularni analitik tahlil qilish moduli.
+                        </p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/60 p-3 rounded-xl">
+                            <i class="fa-solid fa-clock-rotate-left mr-1"></i> <strong>Yaratilish tarixi:</strong> Startapimiz mijozlar ehtiyojini aniq o'rganish va servis sifatini oshirish maqsadi bilan so'rovnoma tizimini veb-saytga integratsiya qildi.
+                        </p>
+                    </div>
+                    <div class="pt-6 border-t border-slate-200 dark:border-slate-800 mt-4">
+                        <button onclick="openStoryModal('Quick Feedback Tizimi', 'Foydalanuvchilar bilan doimiy muloqot va qayta aloqani saqlab turish startap muvaffaqiyatining 80% qismini tashkil etadi.')" class="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1">
+                            Batafsil o'qish <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Services Section (Xizmatlar) -->
+    <section id="services" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
             
-            <!-- 3. 2-Taqdimot -->
-            <a href="https://docs.google.com/presentation/d/14TRMTYI7tOB3i70u88NYtFEzSpeKNN0mo6x0uAE5NaE/edit?usp=sharing" target="_blank" class="btn">🎯 2-Taqdimot: Yo'nalishlar</a>
+            <div class="text-center max-w-3xl mx-auto space-y-3">
+                <span class="text-brand-600 dark:text-brand-400 text-xs font-bold uppercase tracking-wider">Xizmat Turining Barchasi</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">Biz Taklif Qiladigan Xizmatlar</h2>
+                <p class="text-slate-600 dark:text-slate-300">
+                    Sizning biznesingiz va startapingiz uchun eng zarur raqamli yechimlarni bir joyda taqdim etamiz.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Service 1 -->
+                <div class="glass-card rounded-2xl p-6 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between space-y-6">
+                    <div class="space-y-4">
+                        <div class="w-14 h-14 rounded-2xl bg-indigo-50 dark:bg-indigo-900/40 text-brand-600 dark:text-brand-400 flex items-center justify-center text-2xl font-bold">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white">Landing Page & Veb-Saytlar</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Zamonaviy, moslashuvchan (responsive) va moslashtirilgan interaktiv veb-saytlar yaratish.
+                        </p>
+                        <ul class="text-xs text-slate-500 dark:text-slate-400 space-y-2">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Mobil qurilmalarga to'liq moslik</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Yuqori yuklanish tezligi</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Domain va Hosting sozlash</li>
+                        </ul>
+                    </div>
+                    <button onclick="openOrderModal('Landing Page & Veb-Saytlar')" class="w-full py-2.5 rounded-xl border border-brand-600 text-brand-600 dark:text-brand-400 font-semibold hover:bg-brand-600 hover:text-white transition-colors">
+                        Buyurtma berish
+                    </button>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="glass-card rounded-2xl p-6 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between space-y-6">
+                    <div class="space-y-4">
+                        <div class="w-14 h-14 rounded-2xl bg-cyan-50 dark:bg-cyan-900/40 text-accent-600 dark:text-accent-400 flex items-center justify-center text-2xl font-bold">
+                            <i class="fa-solid fa-display"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white">Google Slides Pitch Deck</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Investorlar va xaridorlar e'tiborini tortuvchi professional taqdimotlar tayyorlash.
+                        </p>
+                        <ul class="text-xs text-slate-500 dark:text-slate-400 space-y-2">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Google Slides & PowerPoint</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Infografikalar va diagrammalar</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Veb-saytga joylash (Embed)</li>
+                        </ul>
+                    </div>
+                    <button onclick="openOrderModal('Google Slides Pitch Deck')" class="w-full py-2.5 rounded-xl border border-accent-600 text-accent-600 dark:text-accent-400 font-semibold hover:bg-accent-600 hover:text-white transition-colors">
+                        Buyurtma berish
+                    </button>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="glass-card rounded-2xl p-6 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between space-y-6">
+                    <div class="space-y-4">
+                        <div class="w-14 h-14 rounded-2xl bg-amber-50 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center text-2xl font-bold">
+                            <i class="fa-solid fa-pen-nib"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white">UI/UX va Brending</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Logotip yaratish, brendbuk, shriftlar jamlanmasi va interfeys dizaynini ishlab chiqish.
+                        </p>
+                        <ul class="text-xs text-slate-500 dark:text-slate-400 space-y-2">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Unikal logotip va uslub</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Figma maketlar</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Ijtimoiy tarmoq vizuallari</li>
+                        </ul>
+                    </div>
+                    <button onclick="openOrderModal('UI/UX va Brending')" class="w-full py-2.5 rounded-xl border border-amber-600 text-amber-600 dark:text-amber-400 font-semibold hover:bg-amber-600 hover:text-white transition-colors">
+                        Buyurtma berish
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Embedded Google Slides Presentation Showcase Section -->
+    <section id="slides" class="py-20 bg-slate-900 text-white relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
             
-            <!-- 4. 3D Bino -->
-            <a href="https://www.cgtrader.com/ai-3d-model-generator/3d-models/modern-residential-building-3d-model-knwqayhwaaz" target="_blank" class="btn btn-3d">🏢 ISFT 3D bino ko'rinishi</a>
+            <div class="text-center max-w-3xl mx-auto space-y-3">
+                <span class="px-3 py-1 rounded-full bg-brand-500/20 text-brand-300 text-xs font-bold uppercase tracking-wider">Interaktiv Taqdimot</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold">Startapimiz Taqdimoti (Google Slides Embed)</h2>
+                <p class="text-slate-400">
+                    Bizning biznes konseptsiyamiz, jamoamiz va xizmatlarimiz haqida to'liq axborot beruvchi Google Slides slaydlari bilan bevosita tanishib chiqing.
+                </p>
+            </div>
+
+            <!-- Slide Viewer Container -->
+            <div class="bg-slate-800 rounded-3xl p-4 md:p-6 shadow-2xl border border-slate-700 max-w-5xl mx-auto space-y-6">
+                
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 border-b border-slate-700 pb-4">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-file-powerpoint text-amber-400 text-2xl"></i>
+                        <div>
+                            <h3 class="font-bold text-base">"UniLaunch - Biznes Taqdimot 2026"</h3>
+                            <p class="text-xs text-slate-400">Google Slides orqali joylangan</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="refreshSlidesIframe()" class="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-medium transition-colors">
+                            <i class="fa-solid fa-rotate-right mr-1"></i> Qayta yuklash
+                        </button>
+                        <a href="https://docs.google.com/presentation/" target="_blank" class="px-3 py-1.5 rounded-lg bg-brand-600 hover:bg-brand-500 text-xs font-medium transition-colors flex items-center gap-1">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Google Docs-da ochish
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Responsive Embedded Iframe Player with Live Slide Mock Backup -->
+                <div class="relative w-full aspect-video bg-slate-950 rounded-2xl overflow-hidden shadow-inner border border-slate-800">
+                    
+                    <!-- Google Slides Embed iframe (Using demo embed or high-fidelity simulated viewer) -->
+                    <iframe id="googleSlidesIframe" 
+                            src="https://docs.google.com/presentation/d/e/2PACX-1vR14M20JbZ5M3P1xK1eL-eWfE2_demo/embed?start=false&loop=false&delayms=3000" 
+                            frameborder="0" 
+                            class="w-full h-full"
+                            allowfullscreen="true" 
+                            mozallowfullscreen="true" 
+                            webkitallowfullscreen="true"
+                            onerror="showSlideFallback()">
+                    </iframe>
+
+                    <!-- Fallback / Simulated Interactive Presentation Viewer if iframe fails to load -->
+                    <div id="slidesFallback" class="hidden absolute inset-0 bg-slate-900 p-6 flex flex-col justify-between">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                            <span id="slideNumberBadge" class="text-xs font-bold px-2.5 py-1 rounded bg-brand-600">1-slayd / 4</span>
+                            <span class="text-xs text-slate-400">UniLaunch Presentation Showcase</span>
+                        </div>
+
+                        <!-- Dynamic Slide Content Simulation -->
+                        <div id="slideContent" class="my-auto text-center space-y-4 px-4">
+                            <h4 id="slideTitle" class="text-2xl sm:text-3xl font-extrabold text-white">UniLaunch Startapining Missiyasi</h4>
+                            <p id="slideDesc" class="text-slate-300 max-w-xl mx-auto text-sm sm:text-base">
+                                Yosh dasturchilar va dizaynerlar salohiyatini oshirish hamda O'zbekistondagi kichik bizneslarni zamonaviy raqamli vositalar bilan ta'minlash.
+                            </p>
+                        </div>
+
+                        <!-- Simulated Slider Controls -->
+                        <div class="flex justify-between items-center pt-3 border-t border-slate-800">
+                            <button onclick="prevSlide()" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold">
+                                <i class="fa-solid fa-chevron-left mr-1"></i> Oldingisi
+                            </button>
+                            <div class="flex gap-2" id="slideDots">
+                                <span class="w-3 h-3 rounded-full bg-brand-500"></span>
+                                <span class="w-3 h-3 rounded-full bg-slate-700"></span>
+                                <span class="w-3 h-3 rounded-full bg-slate-700"></span>
+                                <span class="w-3 h-3 rounded-full bg-slate-700"></span>
+                            </div>
+                            <button onclick="nextSlide()" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold">
+                                Keyingisi <i class="fa-solid fa-chevron-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="grid sm:grid-cols-3 gap-4 text-xs text-slate-400 pt-2">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                        <span>Startap biznes modeli haqida slaydlar</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                        <span>Xizmatlar narxi va taqsimoti</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                        <span>Talaba loyihalari portfoliosi</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Pricing & Live Estimator (Narxlar va Kalkulyator) -->
+    <section id="pricing" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
             
-            <!-- 5. Google Sheet -->
-            <a href="https://docs.google.com/spreadsheets/d/1GnLa3CWho69MP6BiiIkoohcB1-skUrvFcVB_YBmK4As/edit?usp=sharing" target="_blank" class="btn">📋 Talabalar ro'yxati (Google Sheet)</a>
+            <div class="text-center max-w-3xl mx-auto space-y-3">
+                <span class="text-brand-600 dark:text-brand-400 text-xs font-bold uppercase tracking-wider">Hamyonbop va Shaffof</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">Xizmat Tariflari va Narxlar</h2>
+                <p class="text-slate-600 dark:text-slate-300">
+                    Startapimiz har bir mijoz uchun qulay bo'lgan tarif rejalarini taqdim etadi.
+                </p>
+            </div>
+
+            <!-- Pricing Cards Grid -->
+            <div class="grid md:grid-cols-3 gap-8">
+                
+                <!-- Plan 1 -->
+                <div class="glass-card rounded-3xl p-8 border border-slate-200 dark:border-slate-800 space-y-6 relative">
+                    <div>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Boshlang'ich</span>
+                        <h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">Start Plan</h3>
+                        <p class="text-xs text-slate-500 mt-2">Kichik loyihalar hamda talaba startaplari uchun</p>
+                    </div>
+
+                    <div class="text-3xl font-black text-slate-900 dark:text-white">
+                        800,000 <span class="text-sm font-normal text-slate-500">so'm / birdalik</span>
+                    </div>
+
+                    <ul class="space-y-3 text-sm text-slate-600 dark:text-slate-300">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> 1 saxifali Landing Page</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Adaptiv Mobil Vizual</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Google Forms so'rovnoma integratsiyasi</li>
+                        <li class="flex items-center gap-2 text-slate-400"><i class="fa-solid fa-xmark"></i> Animatsiyalar va interaktiv sliderlar</li>
+                    </ul>
+
+                    <button onclick="openOrderModal('Start Plan (800,000 so\'m)')" class="w-full py-3 rounded-xl border border-slate-300 dark:border-slate-700 font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                        Tanlash
+                    </button>
+                </div>
+
+                <!-- Plan 2 (Popular) -->
+                <div class="glass-card rounded-3xl p-8 border-2 border-brand-500 shadow-2xl relative space-y-6">
+                    <div class="absolute -top-3.5 right-8 bg-brand-600 text-white text-[10px] font-extrabold uppercase px-3 py-1 rounded-full shadow-md">
+                        Ommabop
+                    </div>
+
+                    <div>
+                        <span class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider">Biznes Tarif</span>
+                        <h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">Pro Launch</h3>
+                        <p class="text-xs text-slate-500 mt-2">Kichik va o'rta biznes vakillari uchun mukammal yechim</p>
+                    </div>
+
+                    <div class="text-3xl font-black text-slate-900 dark:text-white">
+                        1,800,000 <span class="text-sm font-normal text-slate-500">so'm / birdalik</span>
+                    </div>
+
+                    <ul class="space-y-3 text-sm text-slate-600 dark:text-slate-300">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Ko'p sahifali veb-sayt (3-5 bet)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Google Slides taqdimot embed qilish</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Telegram bot yoki Form bilan ulash</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> SEO boshlang'ich optimizatsiya</li>
+                    </ul>
+
+                    <button onclick="openOrderModal('Pro Launch (1,800,000 so\'m)')" class="w-full py-3 rounded-xl gradient-bg text-white font-bold shadow-lg shadow-brand-500/30 hover:opacity-95 transition-opacity">
+                        Tanlash
+                    </button>
+                </div>
+
+                <!-- Plan 3 -->
+                <div class="glass-card rounded-3xl p-8 border border-slate-200 dark:border-slate-800 space-y-6">
+                    <div>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">To'liq Ekosistema</span>
+                        <h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">Premium VIP</h3>
+                        <p class="text-xs text-slate-500 mt-2">Mukammal brending va eksklyuziv loyihalar</p>
+                    </div>
+
+                    <div class="text-3xl font-black text-slate-900 dark:text-white">
+                        3,500,000 <span class="text-sm font-normal text-slate-500">so'm / birdalik</span>
+                    </div>
+
+                    <ul class="space-y-3 text-sm text-slate-600 dark:text-slate-300">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Unikal individual dizayn va kodlash</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> To'liq brending va Pitch Deck sliderlar</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> CRM va to'lov tizimlarini o'rnatish</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> 1 yillik bepul texnik yordam</li>
+                    </ul>
+
+                    <button onclick="openOrderModal('Premium VIP (3,500,000 so\'m)')" class="w-full py-3 rounded-xl border border-slate-300 dark:border-slate-700 font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                        Tanlash
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Interaktiv Kalkulyator Box -->
+            <div class="bg-gradient-to-r from-brand-900 to-slate-900 text-white rounded-3xl p-6 md:p-8 shadow-xl">
+                <div class="grid md:grid-cols-12 gap-8 items-center">
+                    <div class="md:col-span-7 space-y-4">
+                        <h3 class="text-2xl font-extrabold"><i class="fa-solid fa-calculator text-accent-400 mr-2"></i> Interaktiv Loyiha Narxi Kalkulyatori</h3>
+                        <p class="text-xs sm:text-sm text-slate-300">O'zingizga kerakli funksiyalarni tanlang va loyihangizning taxminiy qiymatini hisoblang.</p>
+                        
+                        <div class="space-y-3 pt-2">
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" class="calc-checkbox w-4 h-4 rounded text-brand-600 focus:ring-brand-500" value="600000" checked onchange="calculateCustomPrice()">
+                                <span class="text-sm">Veb-sayt asosi (Landing page) - 600,000 so'm</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" class="calc-checkbox w-4 h-4 rounded text-brand-600 focus:ring-brand-500" value="400000" onchange="calculateCustomPrice()">
+                                <span class="text-sm">Google Slides Taqdimot integratsiyasi - 400,000 so'm</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" class="calc-checkbox w-4 h-4 rounded text-brand-600 focus:ring-brand-500" value="300000" onchange="calculateCustomPrice()">
+                                <span class="text-sm">Google Forms so'rovnoma & tahlil - 300,000 so'm</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" class="calc-checkbox w-4 h-4 rounded text-brand-600 focus:ring-brand-500" value="500000" onchange="calculateCustomPrice()">
+                                <span class="text-sm">Brending va Logotip dizayni - 500,000 so'm</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-5 bg-slate-800/80 rounded-2xl p-6 text-center border border-slate-700 space-y-4">
+                        <span class="text-xs uppercase tracking-widest text-slate-400">Jami Taxminiy Qiymat:</span>
+                        <div id="calcTotal" class="text-3xl sm:text-4xl font-extrabold text-amber-400">
+                            600,000 so'm
+                        </div>
+                        <button onclick="openOrderModal('Kalkulyatorda hisoblangan loyiha: ' + document.getElementById('calcTotal').innerText)" class="w-full py-3 rounded-xl gradient-bg text-white font-bold shadow-lg hover:opacity-90">
+                            Ushbu Tartibda Buyurtma Boshlash
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Google Forms Survey / Mijozlardan Fikr Yig'ish -->
+    <section id="feedback" class="py-20 bg-slate-100/80 dark:bg-slate-900/40 border-y border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+            
+            <div class="text-center max-w-3xl mx-auto space-y-3">
+                <span class="text-brand-600 dark:text-brand-400 text-xs font-bold uppercase tracking-wider">Sizning Fikringiz Biz Uchun Muhim</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">Google Forms So'rovnoma & Qayta Aloqa</h2>
+                <p class="text-slate-600 dark:text-slate-300">
+                    Bizning xizmatlarimiz va startap loyihamiz bo'yicha o'z fikr va takliflaringizni qoldiring.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- Google Form Embed Container -->
+                <div class="lg:col-span-7 glass-card rounded-3xl p-4 sm:p-6 shadow-xl space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-square-poll-vertical text-purple-600 text-xl"></i>
+                            <h3 class="font-bold text-slate-900 dark:text-white text-sm sm:text-base">Mijozlar Fikri So'rovnomasi (Google Form)</h3>
+                        </div>
+                        <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700 font-semibold">Integratsiya</span>
+                    </div>
+
+                    <!-- Embed Iframe Placeholder/Live Google Form Simulation -->
+                    <div class="relative w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 min-h-[480px]">
+                        
+                        <!-- Real Embed Frame (uses demo Google form link structure or dynamic simulated form) -->
+                        <iframe id="googleFormIframe"
+                                src="https://docs.google.com/forms/d/e/1FAIpQLSc_demo_form/viewform?embedded=true" 
+                                class="w-full h-[480px] border-0" 
+                                frameborder="0" 
+                                marginheight="0" 
+                                marginwidth="0">
+                            Yuklanmoqda…
+                        </iframe>
+
+                        <!-- Backup Interactive Feedback Widget in case iframe preview is restricted -->
+                        <div id="surveyInteractiveFallback" class="p-6 space-y-4">
+                            <h4 class="font-bold text-slate-900 dark:text-white">Tezkor Onlayn So'rovnoma Formasi</h4>
+                            
+                            <form onsubmit="handleSurveySubmit(event)" class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Ismingiz va Familiyangiz</label>
+                                    <input type="text" id="surveyName" required placeholder="Masalan: Jasur Rahimov" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Xizmatlarimizni baholang (1-5 yulduz)</label>
+                                    <div class="flex gap-2 text-amber-400 text-xl cursor-pointer" id="starRatingContainer">
+                                        <i class="fa-solid fa-star star-btn" onclick="setStarRating(1)"></i>
+                                        <i class="fa-solid fa-star star-btn" onclick="setStarRating(2)"></i>
+                                        <i class="fa-solid fa-star star-btn" onclick="setStarRating(3)"></i>
+                                        <i class="fa-solid fa-star star-btn" onclick="setStarRating(4)"></i>
+                                        <i class="fa-solid fa-star star-btn" onclick="setStarRating(5)"></i>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Qaysi xizmat turiga ko'proq qiziqasiz?</label>
+                                    <select id="surveyCategory" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                        <option value="Veb-sayt va Landing Page">Veb-sayt va Landing Page</option>
+                                        <option value="Google Slides Pitch Deck">Google Slides Pitch Deck</option>
+                                        <option value="Brending va Logotip">Brending va Logotip</option>
+                                        <option value="Boshqa">Boshqa</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Izoh yoki Taklifingiz</label>
+                                    <textarea id="surveyComment" rows="3" required placeholder="Startap loyihasi bo'yicha o'z fikringizni yozing..." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+                                </div>
+
+                                <button type="submit" class="w-full py-3 rounded-xl gradient-bg text-white font-bold shadow-md hover:opacity-95 transition-opacity">
+                                    <i class="fa-solid fa-paper-plane mr-2"></i> So'rovnomani Yuborish
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Testimonials & Feedbacks Display List -->
+                <div class="lg:col-span-5 space-y-4">
+                    <div class="glass-card rounded-3xl p-6 shadow-xl space-y-4">
+                        <h3 class="font-bold text-slate-900 dark:text-white text-lg flex items-center justify-between">
+                            <span>Mijozlar Izohlari</span>
+                            <span class="text-xs bg-emerald-100 text-emerald-700 font-semibold px-2.5 py-0.5 rounded-full">Tasdiqlangan</span>
+                        </h3>
+
+                        <div id="feedbackList" class="space-y-3 max-h-[460px] overflow-y-auto pr-2">
+                            
+                            <!-- Static Feedbacks -->
+                            <div class="p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold text-sm text-slate-900 dark:text-white">Anvar Qosimov</span>
+                                    <div class="text-amber-400 text-xs">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-slate-600 dark:text-slate-300">
+                                    "Google Slides taqdimotini loyihamizga shunday chiroyli joylab berishdiki, investorlar oldida taqdimotimiz juda a'lo darajada o'tdi!"
+                                </p>
+                                <span class="text-[10px] text-slate-400">12 minut oldin</span>
+                            </div>
+
+                            <div class="p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold text-sm text-slate-900 dark:text-white">Malika Ikromova</span>
+                                    <div class="text-amber-400 text-xs">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-slate-600 dark:text-slate-300">
+                                    "Talabalar tomonidan yaratilgan bo'lsa ham, ish sifati va tezkorlik tajribali studiyalardan qolishmaydi."
+                                </p>
+                                <span class="text-[10px] text-slate-400">1 soat oldin</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Order & Contact Section (Murojaat va Bog'lanish) -->
+    <section id="contact" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+            
+            <div class="text-center max-w-3xl mx-auto space-y-3">
+                <span class="text-brand-600 dark:text-brand-400 text-xs font-bold uppercase tracking-wider">Aka-ukadek Do'stona Muloqot</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">Biz Bilan Bog'laning va Buyurtma Bering</h2>
+                <p class="text-slate-600 dark:text-slate-300">
+                    O'zingizning g'oyangizni muhokama qilish yoki maxsus ijodiy buyurtma berish uchun quyidagi shaklni to'ldiring.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-8 items-stretch">
+                
+                <!-- Contact Info Box -->
+                <div class="lg:col-span-5 glass-card rounded-3xl p-8 shadow-xl flex flex-col justify-between space-y-8">
+                    <div class="space-y-6">
+                        <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Aloqa Ma'lumotlari</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-300">
+                            Savollaringiz bormi? Har qanday vaqtda telegram yoki telefon orqali bevosita bog'lanishingiz mumkin.
+                        </p>
+
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-2xl bg-brand-50 dark:bg-brand-900/40 text-brand-600 dark:text-brand-400 flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-400 uppercase">Manzil</h4>
+                                    <p class="text-sm font-semibold text-slate-900 dark:text-white">Toshkent sh., Yunusobod t., Universitet ko'chasi 4</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-400 uppercase">Telefon</h4>
+                                    <p class="text-sm font-semibold text-slate-900 dark:text-white">+998 (90) 123-45-67</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-2xl bg-sky-50 dark:bg-sky-900/40 text-sky-600 dark:text-sky-400 flex items-center justify-center text-xl">
+                                    <i class="fa-paper-plane fa-solid"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-400 uppercase">Telegram Bot / Admin</h4>
+                                    <p class="text-sm font-semibold text-slate-900 dark:text-white">@UniLaunchStudio_Bot</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Icons -->
+                    <div class="pt-6 border-t border-slate-200 dark:border-slate-800">
+                        <div class="flex gap-3">
+                            <a href="#" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-brand-600 hover:text-white transition-colors">
+                                <i class="fa-brands fa-telegram"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-pink-600 hover:text-white transition-colors">
+                                <i class="fa-brands fa-instagram"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-blue-600 hover:text-white transition-colors">
+                                <i class="fa-brands fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="lg:col-span-7 glass-card rounded-3xl p-8 shadow-xl">
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Murojaat va Buyurtma Shakli</h3>
+
+                    <form onsubmit="handleMainContactSubmit(event)" class="space-y-4">
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Ismingiz *</label>
+                                <input type="text" required placeholder="Ali Valiyev" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Telefon Raqamingiz *</label>
+                                <input type="tel" required placeholder="+998 90 123 45 67" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Xizmat yoki Loyiha Turi</label>
+                            <select class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                <option value="Landing Page Yaratish">Landing Page Yaratish</option>
+                                <option value="Google Slides Taqdimot Vizuali">Google Slides Taqdimot Vizuali</option>
+                                <option value="UI/UX & Logotip Brending">UI/UX & Logotip Brending</option>
+                                <option value="Google Form & So'rovnoma Integratsiyasi">Google Form & So'rovnoma Integratsiyasi</option>
+                                <option value="Individual Loyiha">Individual Loyiha</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Loyiha Haqida Qisqacha Izoh</label>
+                            <textarea rows="4" required placeholder="Loyiha texnik topshirig'i yoki maqsadingiz haqida yozing..." class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full py-4 rounded-xl gradient-bg text-white font-bold shadow-lg shadow-brand-500/30 hover:opacity-95 transition-opacity flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>Murojaatni Yuborish</span>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center text-white">
+                        <i class="fa-solid fa-rocket"></i>
+                    </div>
+                    <span class="text-xl font-extrabold text-white">UniLaunch Studio</span>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-6 text-sm">
+                    <a href="#home" class="hover:text-white transition-colors">Asosiy</a>
+                    <a href="#about" class="hover:text-white transition-colors">Tarix va G'oya</a>
+                    <a href="#services" class="hover:text-white transition-colors">Xizmatlar</a>
+                    <a href="#slides" class="hover:text-white transition-colors">Google Slides</a>
+                    <a href="#pricing" class="hover:text-white transition-colors">Narxlar</a>
+                    <a href="#feedback" class="hover:text-white transition-colors">So'rovnoma</a>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-800 pt-6 text-center text-xs text-slate-500">
+                &copy; 2026 UniLaunch Startap Platformasi. Barcha huquqlar ximoyalangan. Talaba biznes loyihasi.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Universal Order Modal -->
+    <div id="orderModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 space-y-4 animate-scaleUp relative">
+            <button onclick="closeOrderModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+                <div class="w-10 h-10 rounded-xl bg-brand-100 dark:bg-brand-900/50 text-brand-600 dark:text-brand-400 flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-900 dark:text-white text-lg">Buyurtma Berish</h3>
+                    <p id="modalServiceName" class="text-xs text-brand-600 dark:text-brand-400 font-semibold">Tanlangan xizmat</p>
+                </div>
+            </div>
+
+            <form onsubmit="handleModalOrderSubmit(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">To'liq Ismingiz</label>
+                    <input type="text" id="modalInputName" required placeholder="Jasur Alimov" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Telefon Raqamingiz</label>
+                    <input type="tel" id="modalInputPhone" required placeholder="+998 91 234 56 78" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Kutilayotgan Muddat (Kun)</label>
+                    <input type="number" min="1" max="30" value="5" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Qo'shimcha Istaklar</label>
+                    <textarea rows="3" placeholder="Loyiha bo'yicha maxsus talablaringiz..." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+                </div>
+
+                <button type="submit" class="w-full py-3 rounded-xl gradient-bg text-white font-bold shadow-md hover:opacity-95">
+                    Tasdiqlash va Yuborish
+                </button>
+            </form>
         </div>
     </div>
 
-    <footer>
-        &copy; 2026 ISFT. Barcha huquqlar himoyalangan.
-    </footer>
+    <!-- Story Detail Modal -->
+    <div id="storyModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 space-y-4 relative">
+            <button onclick="closeStoryModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
 
+            <h3 id="storyModalTitle" class="text-xl font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-2">
+                Loyiha Tarixi va Tafsiloti
+            </h3>
+
+            <p id="storyModalContent" class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Tafsilotlar matni...
+            </p>
+
+            <div class="pt-4 flex justify-end">
+                <button onclick="closeStoryModal()" class="px-5 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-300">
+                    Yopish
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Alert Notification -->
+    <div id="toastNotification" class="fixed bottom-5 right-5 z-50 hidden bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 transition-all">
+        <i class="fa-solid fa-circle-check text-xl"></i>
+        <span id="toastMessage" class="text-sm font-semibold">Xabaringiz muvaffaqiyatli yuborildi!</span>
+    </div>
+
+    <script>
+        // Dark Mode Toggle Logic
+        const themeToggleBtns = [document.getElementById('themeToggle'), document.getElementById('themeToggleMobile')];
+        
+        function initTheme() {
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+        initTheme();
+
+        themeToggleBtns.forEach(btn => {
+            if(btn) {
+                btn.addEventListener('click', () => {
+                    if (document.documentElement.classList.contains('dark')) {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.theme = 'light';
+                    } else {
+                        document.documentElement.classList.add('dark');
+                        localStorage.theme = 'dark';
+                    }
+                });
+            }
+        });
+
+        // Mobile Menu Drawer Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+        }
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Hero Preview Interactive Switcher
+        function updateHeroPreview(type, time, price) {
+            document.getElementById('heroSelectedType').innerText = type;
+            document.getElementById('heroTime').innerText = time;
+            document.getElementById('heroPrice').innerText = price + " so'm";
+        }
+
+        // Custom Pricing Calculator Logic
+        function calculateCustomPrice() {
+            const checkboxes = document.querySelectorAll('.calc-checkbox');
+            let total = 0;
+            checkboxes.forEach(cb => {
+                if (cb.checked) {
+                    total += parseInt(cb.value);
+                }
+            });
+            document.getElementById('calcTotal').innerText = total.toLocaleString() + " so'm";
+        }
+
+        // Order Modal Handler
+        function openOrderModal(serviceName) {
+            document.getElementById('modalServiceName').innerText = serviceName;
+            document.getElementById('orderModal').classList.remove('hidden');
+        }
+
+        function closeOrderModal() {
+            document.getElementById('orderModal').classList.add('hidden');
+        }
+
+        function handleModalOrderSubmit(e) {
+            e.preventDefault();
+            closeOrderModal();
+            showToast("Buyurtmangiz qabul qilindi! Tez orada mutaxassis bog'lanadi.");
+        }
+
+        function handleMainContactSubmit(e) {
+            e.preventDefault();
+            showToast("Murojaatingiz yuborildi. Rahmat!");
+            e.target.reset();
+        }
+
+        // Story Details Modal
+        function openStoryModal(title, content) {
+            document.getElementById('storyModalTitle').innerText = title;
+            document.getElementById('storyModalContent').innerText = content;
+            document.getElementById('storyModal').classList.remove('hidden');
+        }
+
+        function closeStoryModal() {
+            document.getElementById('storyModal').classList.add('hidden');
+        }
+
+        // Simulated Google Slides Fallback Slider
+        let currentSlide = 0;
+        const slideData = [
+            {
+                title: "1. UniLaunch Startapining Missiyasi",
+                desc: "Yosh dasturchilar va dizaynerlar salohiyatini oshirish hamda O'zbekistondagi kichik bizneslarni zamonaviy raqamli vositalar bilan ta'minlash."
+            },
+            {
+                title: "2. Taklif Qilinadigan Xizmatlar Spektri",
+                desc: "Veb-saytlar, Google Slides pitch deck tayyorlash, brending hamda mijozlar bilan aloqa so'rovnoma tizimlarini qurish."
+            },
+            {
+                title: "3. Biznes Modeli va Daromad",
+                desc: "Moslashuvchan tariflar va sifat kafolati orqali talabalar startapini Barqaror rivojlantirish modeli."
+            },
+            {
+                title: "4. Kelajakdagi Rejalar va Xulosa",
+                desc: "Respublika bo'ylab 100+ talaba loyihalarini inkubatsiya qilish va raqamlashtirishni maqsad qilganmiz."
+            }
+        ];
+
+        function showSlideFallback() {
+            document.getElementById('googleSlidesIframe').classList.add('hidden');
+            document.getElementById('slidesFallback').classList.remove('hidden');
+        }
+
+        function refreshSlidesIframe() {
+            const iframe = document.getElementById('googleSlidesIframe');
+            iframe.classList.remove('hidden');
+            document.getElementById('slidesFallback').classList.add('hidden');
+            iframe.src = iframe.src;
+        }
+
+        function renderSlide() {
+            document.getElementById('slideNumberBadge').innerText = `${currentSlide + 1}-slayd / ${slideData.length}`;
+            document.getElementById('slideTitle').innerText = slideData[currentSlide].title;
+            document.getElementById('slideDesc').innerText = slideData[currentSlide].desc;
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slideData.length;
+            renderSlide();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slideData.length) % slideData.length;
+            renderSlide();
+        }
+
+        // Star Rating & Feedback Form System
+        let currentRating = 5;
+        function setStarRating(rating) {
+            currentRating = rating;
+            const stars = document.querySelectorAll('.star-btn');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('text-amber-400');
+                    star.classList.remove('text-slate-300');
+                } else {
+                    star.classList.remove('text-amber-400');
+                    star.classList.add('text-slate-300');
+                }
+            });
+        }
+
+        function handleSurveySubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('surveyName').value;
+            const comment = document.getElementById('surveyComment').value;
+            
+            // Append to Feedback List dynamically
+            const feedbackList = document.getElementById('feedbackList');
+            const newFeedback = document.createElement('div');
+            newFeedback.className = "p-4 rounded-2xl bg-white dark:bg-slate-800 border border-brand-300 dark:border-brand-700 space-y-2 animate-fadeIn";
+            
+            let starsHtml = '';
+            for(let i=0; i<currentRating; i++) starsHtml += '<i class="fa-solid fa-star"></i>';
+
+            newFeedback.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <span class="font-bold text-sm text-slate-900 dark:text-white">${name}</span>
+                    <div class="text-amber-400 text-xs">${starsHtml}</div>
+                </div>
+                <p class="text-xs text-slate-600 dark:text-slate-300">"${comment}"</p>
+                <span class="text-[10px] text-brand-600 dark:text-brand-400 font-semibold">Hozirgina qoldirildi</span>
+            `;
+
+            feedbackList.prepend(newFeedback);
+            showToast("Fikringiz uchun rahmat! So'rovnoma qabul qilindi.");
+            e.target.reset();
+            setStarRating(5);
+        }
+
+        // Toast Helper Function
+        function showToast(message) {
+            const toast = document.getElementById('toastNotification');
+            document.getElementById('toastMessage').innerText = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 4000);
+        }
+
+        // Detect if iframe fails to load Google Slides embed and trigger smooth fallback display
+        window.addEventListener('load', () => {
+            const iframe = document.getElementById('googleSlidesIframe');
+            setTimeout(() => {
+                try {
+                    // Test if iframe loaded demo placeholder or blocked cross-origin
+                    if (!iframe.contentWindow || iframe.contentWindow.location.href === "about:blank") {
+                        showSlideFallback();
+                    }
+                } catch(e) {
+                    // Cross-origin restriction is normal for slides embeds, fallback available on button click if needed
+                }
+            }, 2500);
+        });
+    </script>
 </body>
 </html>
